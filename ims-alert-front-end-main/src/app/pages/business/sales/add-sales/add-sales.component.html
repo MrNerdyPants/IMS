@@ -1,0 +1,116 @@
+<form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <div class="filter-section mb-4">
+        <div class="row">
+            <div class="col-3 mb-2">
+                <div class="form-group">
+                    <label class="require">Date</label>
+                    <input formControlName='date' type="date" class="form-control" [value]="saleDate"
+                        [ngClass]="{'is-invalid': addForm.get('date')?.invalid && addForm.get('date')?.touched}"
+                        required>
+                    <div class="invalid-feedback">Date is Required!</div>
+                </div>
+            </div>
+            <div class="col-3 mb-3">
+                <div class="form-group">
+                    <label class="require">Customer</label>
+                    <ng-select class="custom" [clearable]="false" required formControlName='customer' [loading]=loading
+                        [style]="addForm.get('customer')?.invalid &&(addForm.get('customer')?.dirty || addForm.get('customer')?.touched)?
+                                                    'border-color: #d9534f':''">
+                        <ng-option value="">Please Select</ng-option>
+                        <ng-option *ngFor="let c of customers?.response" [value]="c?.id">{{c?.name}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="items-section">
+        <div class="main-body-content">
+            <div class="table-responsive-sm">
+                <table id="sailorTable" width="100%" class="table table-striped table-hover align-middle"
+                    style="border: 1px solid #dfe6e9;">
+                    <thead class="light-background" style="border-bottom: 0px;">
+                        <tr>
+                            <th width="21%">Product type</th>
+                            <th width="21%">Models</th>
+                            <th width="15%">Product Name</th>
+                            <th width="20%">Serial #</th>
+                            <th width="15%">Reference #</th>
+                            <th width="8%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr formArrayName="detail" *ngFor="let detail of getDetail.controls; let serialGroup = index;">
+                            <ng-container [formGroupName]="serialGroup">
+                                <td>
+                                    <ng-select class="custom" [clearable]="false" formControlName='productType' required
+                                        [style]="detail.get('productType')?.invalid &&(detail.get('productType')?.dirty || detail.get('productType')?.touched)?
+                        'border-color: #d9534f':''" (change)="getProductsByType($event,serialGroup)">
+                                        <ng-option value="">Please Select</ng-option>
+                                        <ng-option *ngFor="let p of productTypes?.response" [value]="p?.id">{{p?.title +
+                                            ' [' + p?.code + ']'}}
+                                        </ng-option>
+                                    </ng-select>
+                                </td>
+                                <td>
+                                    <ng-select class="custom" [clearable]="false" formControlName='product' required
+                                        [style]="detail.get('product')?.invalid &&(detail.get('product')?.dirty || detail.get('product')?.touched)?
+                        'border-color: #d9534f':''" (change)="selectedProduct($event,serialGroup)">
+                                        <ng-option value="">Please Select</ng-option>
+                                        <ng-option *ngFor="let p of detail.get('productList')?.value"
+                                            [value]="p?.id">{{p?.modelTitle}}
+                                        </ng-option>
+                                    </ng-select>
+                                </td>
+                                <td><input type="text" class="form-control" formControlName='model' readonly /></td>
+                                <td><input type="text" class="form-control" formControlName='serial'
+                                        [ngClass]="{'is-invalid': detail.get('serial')?.invalid && detail.get('serial')?.touched}"
+                                        required />
+                                    <ng-container formArrayName="mudulerSerial"
+                                        *ngFor="let mudDetail of getMuduler(serialGroup).controls; let mudSerialGroup = index;">
+                                        <ng-container [formGroupName]="mudSerialGroup">
+                                            <div *ngIf="mudSerialGroup === 0" class="d-flex my-2">
+                                                <label class="text-left w-40 font-weight-600">Muduler name</label>
+                                                <label class="text-left w-60 font-weight-600">Muduler Serial</label>
+                                            </div>
+                                            <div class="d-flex">
+                                                <input type="text" class="form-control w-40" readonly
+                                                    formControlName='name' />
+                                                <input type="text" class="form-control w-60" formControlName='serial'
+                                                    [ngClass]="{'is-invalid': mudDetail.get('serial')?.invalid && mudDetail.get('serial')?.touched}"
+                                                    required />
+                                            </div>
+                                        </ng-container>
+                                    </ng-container>
+                                </td>
+                                <td><input type="text" class="form-control" formControlName='referenceNo' /></td>
+                                <td>
+                                    <div class="d-flex justify-content-start">
+                                        <button type="button" class="btn btn-dark btn-icon waves-effect" title="Add"
+                                            (click)="addDetail()">
+                                            <i class="ri-add-fill"></i>
+                                        </button>
+                                        &nbsp;
+                                        <button type="button" class="btn btn-danger btn-icon waves-effect waves-light"
+                                            title="Remove" (click)="removeDetail(serialGroup)">
+                                            <i class="ri-subtract-line"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <footer class="position-relative">
+        <div class="fixed-bottom footer-inner">
+            <div class="position-fixed bottom-0 end-0 pb-2 pe-3">
+                <button type="submit" class="btn btn-dark btn-label waves-effect waves-light rounded-pill">
+                    <i class="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </footer>
+</form>

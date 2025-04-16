@@ -1,0 +1,15 @@
+.label{
+    font-size: 12px;
+    font-weight: 600;
+}
+.value{
+    font-size: 10px;
+    font-weight: 400;
+}
+.header-label{
+    font-size: 14px;
+    font-weight: 600;
+}
+.text-orange{
+    color: orange;
+}

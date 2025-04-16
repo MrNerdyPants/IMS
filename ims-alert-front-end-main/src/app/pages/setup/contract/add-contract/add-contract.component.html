@@ -1,0 +1,129 @@
+<form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <div class="accordion" id="accordionMain">
+        <div class="accordion-item">
+
+            <div id="collapseEmpInformation" class="accordion-collapse collapse show" aria-labelledby="empInformation"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row">
+                        <div class="col-3 mb-3">
+                            <div class="form-group">
+                                <label class="require">Customer</label>
+                                <ng-select class="custom" [clearable]="false" required formControlName='customer'
+                                    [loading]=loading [style]="addForm.get('customer')?.invalid &&(addForm.get('customer')?.dirty || addForm.get('customer')?.touched)?
+                                                'border-color: #d9534f':''">
+                                    <ng-option value="">Please Select</ng-option>
+                                    <ng-option *ngFor="let c of customers?.response" [value]="c?.id">{{c?.name}}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-3 mb-3">
+                            <div class="form-group">
+                                <label class="require">Payment Period</label>
+                                <ng-select class="custom" [clearable]="false" formControlName='period'>
+                                    <ng-option value="">Please Select</ng-option>
+                                    <ng-option value="Monthly">Monthly</ng-option>
+                                    <ng-option value="Quarterly">Quarterly</ng-option>
+                                    <ng-option value="Yearly">Yearly</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-3 mb-2">
+                            <div class="form-group">
+                                <label class="require">Start Date</label>
+                                <input formControlName='date' type="date" class="form-control" [value]="contractDate"
+                                    [ngClass]="{'is-invalid': addForm.get('date')?.invalid && addForm.get('date')?.touched}"
+                                    required>
+                                <div class="invalid-feedback">Start Date is Required!</div>
+                            </div>
+                        </div>
+                        <div class="col-3 mb-2">
+                            <div class="form-group">
+                                <label class="require">Expiry Date</label>
+                                <input formControlName='expiry' type="date" class="form-control"
+                                    [ngClass]="{'is-invalid': addForm.get('expiry')?.invalid && addForm.get('expiry')?.touched}"
+                                    required>
+                                <div class="invalid-feedback">Expiry Date is Required!</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive-sm">
+                        <table id="sailorTable" width="100%" class="table table-striped table-hover align-middle"
+                            style="border: 1px solid #dfe6e9;">
+                            <thead class="light-background" style="border-bottom: 0px;">
+                                <tr>
+                                    <th>Maintenance Type</th>
+                                    <th>Payment Term</th>
+                                    <th>No of Visits</th>
+                                    <th>Amount</th>
+                                    <th class="w-5">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr formArrayName="detail"
+                                    *ngFor="let detail of getDetail.controls; let serialGroup = index;">
+                                    <ng-container [formGroupName]="serialGroup">
+                                        <td>
+                                            <ng-select class="custom" [clearable]="false" formControlName='type'
+                                                required [style]="detail.get('type')?.invalid &&(detail.get('type')?.dirty
+                                                 || detail.get('type')?.touched)? 'border-color: #d9534f':''">
+                                                <ng-option value="">Please Select</ng-option>
+                                                <ng-option *ngFor="let p of maintananceTypes"
+                                                    [value]="p?.name">{{p?.name}}
+                                                </ng-option>
+                                            </ng-select>
+                                        </td>
+                                        <td>
+                                            <ng-select class="custom" [clearable]="false" required
+                                                formControlName='paymentTerm' [loading]=loading [style]="detail.get('paymentTerm')?.invalid
+                                     &&(detail.get('paymentTerm')?.dirty || detail.get('paymentTerm')?.touched)?
+                                                'border-color: #d9534f':''">
+                                                <ng-option value="">Please Select</ng-option>
+                                                <ng-option value="Free">Free</ng-option>
+                                                <ng-option value="Paid">Paid</ng-option>
+                                            </ng-select>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control" formControlName='noOfVisits' />
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control" formControlName='amount'
+                                                [ngClass]="{'is-invalid': detail.get('amount')?.invalid && detail.get('amount')?.touched}"
+                                                required />
+                                        </td>
+                                        <td>
+                                            <div class="d-flex justify-content-start">
+                                                <button type="button" class="btn btn-dark btn-icon waves-effect"
+                                                    title="Add" (click)="addDetail()">
+                                                    <i class="ri-add-fill"></i>
+                                                </button>
+                                                &nbsp;
+                                                <button type="button"
+                                                    class="btn btn-danger btn-icon waves-effect waves-light"
+                                                    title="Remove" (click)="removeDetail(serialGroup)">
+                                                    <i class="ri-subtract-line"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="position-relative">
+        <div class="fixed-bottom footer-inner">
+            <div class="position-fixed bottom-0 end-0 pb-2 pe-3">
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-dark btn-label waves-effect waves-light rounded-pill"><i
+                            class="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i> Save
+                        Changes</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+</form>

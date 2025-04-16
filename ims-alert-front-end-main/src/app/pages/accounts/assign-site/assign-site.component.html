@@ -1,0 +1,48 @@
+<div class="main-body-content">
+    <div class="row mb-3">
+        <div class="col-lg-3 col-sm-6">
+            <label class="custom-lable">Users</label>
+            <ng-select [clearable]="false" class="custom" [multiple]="false" [(ngModel)]="user"
+                (change)="getAllSitesByUser($event)">
+                <ng-option value="">All</ng-option>
+                <ng-option *ngFor="let user of allUsers?.response" [value]="user.id">
+                    {{user.name}}
+                </ng-option>
+            </ng-select>
+        </div>
+    </div>
+    <div class="table-responsive-sm w-100 table-wrapper" style="overflow-y: scroll">
+        <table id="sailorTable" width="100%" class="table table-striped table-hover table-bordered"
+            style="border: 1px solid #dfe6e9;">
+            <thead class="light-background" style="border-bottom: 0px;">
+                <tr>
+                    <th class="text-left">
+                        Sites
+                    </th>
+                    <th class="text-left" width="10%">
+                        Assign<br>
+                        <input type="checkbox" (change)="checkAll($event)">
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let site of sites?.response">
+                    <tr>
+                        <td> {{site.name}}</td>
+                        <td><label class="form-radio">
+                                <input type="checkbox" (change)="onCheck(site, $event)"
+                                    [checked]="site?.isChecked==='Y'?true:false">
+                            </label></td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+        <footer class="position-relative">
+            <div class="fixed-bottom footer-inner">
+                <div class="position-fixed bottom-0 end-0 pb-2 pe-3">
+                    <button type="button" class="btn btnedge" (click)="onSave()">Save & Close</button>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>

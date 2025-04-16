@@ -1,0 +1,38 @@
+<div class="items-section">
+    <div class="main-body-content">
+        <div class="table-responsive-sm">
+            <table id="sailorTable" width="100%" class="table table-striped table-hover align-middle"
+                style="border: 1px solid #dfe6e9;">
+                <thead class="light-background" style="border-bottom: 0px;">
+                    <tr>
+                        <th class="text-center" width="5%">Sr.No.</th>
+                        <th class="text-left">Date</th>
+                        <th class="text-left">Manufacturer</th>
+                        <th class="text-left">Vendor</th>
+                        <th class="text-center" colspan="2">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of getResult?.response; index as i">
+                        <td class="text-center">{{i + 1}}</td>
+                        <td>{{data?.date | date : 'dd-MMM-YYYY'}}</td>
+                        <td>{{data?.manufacturer?.name}}</td>
+                        <td>{{data?.vendor?.name}}</td>
+                        <td class="text-center">
+                            <div class="btn-group gap-3">
+                                <button type="button" class="btn btn-sm btn-dark btn-icon waves-effect" title="Edit"
+                                    (click)="openEdit(data?.id)">
+                                    <i class="ri-edit-2-fill"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger btn-icon waves-effect waves-light"
+                                    title="Delete" (click)="openDelete(data?.id)">
+                                    <i class="ri-delete-bin-5-line"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

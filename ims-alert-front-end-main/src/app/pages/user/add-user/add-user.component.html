@@ -1,0 +1,82 @@
+<div class="modal-header text-center">
+    <h3 class="modal-title" id="exampleModalLabel">Add/ Edit User</h3>
+    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"
+        (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body employeeDocImg">
+        <div class="row">
+            <div class="col-12 mb-3">
+                <div class="form-group">
+                    <label class="custom-lable">Name</label>
+                    <input formControlName='title' type="text" class="form-control"
+                        [ngClass]="{'is-invalid': addForm.get('title').invalid && addForm.get('title').touched}"
+                        required>
+                    <div class="invalid-feedback">Name is Required!</div>
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div class="form-group">
+                    <label class="custom-lable">Username</label>
+                    <input formControlName='username' type="text" class="form-control"
+                        [ngClass]="{'is-invalid': addForm.get('username').invalid && addForm.get('username').touched}"
+                        required>
+                    <div class="invalid-feedback">Username is Required!</div>
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div class="form-group">
+                    <label for="file">Choose Profile</label>
+                    <input type="file" id="file" class="form-control" accept=".png, .jpg, .jpeg"
+                        (change)="onFileSelect($event)" />
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div class="form-group">
+                    <label class="custom-lable">Password</label>
+                    <input formControlName='password' type="password" class="form-control">
+                    <div class="invalid-feedback">password is Required!</div>
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div class="form-group">
+                    <label class="custom-lable">Confirm Password</label>
+                    <input formControlName='confirmPassword' type="password" class="form-control">
+                    <div class="invalid-feedback">Confirm password is Required!</div>
+                </div>
+            </div>
+
+            <div class="table-responsive-sm w-100 table-wrapper" style="overflow-y: scroll">
+                <table id="sailorTable" width="100%" class="table table-striped table-hover table-bordered"
+                    style="border: 1px solid #dfe6e9;">
+                    <thead class="light-background" style="border-bottom: 0px;">
+                        <tr>
+                            <th class="text-left">
+                                Groups
+                            </th>
+                            <th class="text-left" width="10%">
+                                Assign<br>
+                                <input type="checkbox" (change)="checkAll($event)">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let group of groups?.response">
+                            <tr>
+                                <td> {{group.name}}</td>
+                                <td><label class="form-radio">
+                                        <input type="checkbox" (change)="onCheck(group, $event)"
+                                            [checked]="group?.isChecked==='Y'?true:false">
+                                    </label></td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-dark btn-label waves-effect waves-light rounded-pill"><i
+                class="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i> Save Changes</button>
+    </div>
+</form>

@@ -1,0 +1,110 @@
+<div class="modal-header text-center">
+    <h3 class="modal-title" id="exampleModalLabel">Add/Edit Manufacturer</h3>
+    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"
+        (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body employeeDocImg">
+        <div class="row">
+            <div class="col-6 mb-3">
+                <img *ngIf="fileData || editData"
+                    src="data:image/png;base64,{{fileData ? fileData : editData?.logo }}" class="profile-pic"
+                    style="width: 115px;height: 115px;" alt="profile" (error)="errorHandler($event)" />
+            </div>
+            <div class="col-6 mb-3">
+                <div class="form-group">
+                    <label for="file">Choose Logo</label>
+                    <input type="file" id="file" class="form-control" accept=".png, .jpg, .jpeg"
+                        (change)="onFileSelect($event)" />
+                </div>
+            </div>
+            <div class="col-12 mb-3">
+                <div class="form-group">
+                    <label class="require">Product Categories</label>
+                    <ng-select class="custom" [clearable]="false" formControlName='category' [loading]=loading
+                        [multiple]="true" required [style]="addForm.get('category')?.invalid &&(addForm.get('category')?.dirty || addForm.get('category')?.touched)?
+                        'border-color: #d9534f':''">
+                        <ng-option *ngFor="let subCat of categories?.response" [value]="subCat?.id">{{subCat?.name}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-7 mb-2">
+                <div class="form-group">
+                    <label class="require">Manufacturer Name</label>
+                    <input formControlName='name' type="text" class="form-control"
+                        [ngClass]="{'is-invalid': addForm.get('name')?.invalid && addForm.get('name')?.touched}"
+                        required>
+                    <div class="invalid-feedback">Manufacturer Name is Required!</div>
+                </div>
+            </div>
+            <div class="col-5 mb-2">
+                <div class="form-group">
+                    <label class="require">Short Name</label>
+                    <input formControlName='shortName' type="text" class="form-control"
+                        [ngClass]="{'is-invalid': addForm.get('shortName')?.invalid && addForm.get('shortName')?.touched}"
+                        required>
+                    <div class="invalid-feedback">Short Name is Required!</div>
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div class="form-group">
+                    <label>Country</label>
+                    <ng-select class="custom" [clearable]="false" formControlName='country' [loading]=loading
+                        (change)="getAllCity($event)">
+                        <ng-option value="">Please Select</ng-option>
+                        <ng-option *ngFor="let country of countries?.response" [value]="country?.id">{{country?.name}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-6 mb-3">
+                <div class="form-group">
+                    <label>City</label>
+                    <ng-select class="custom" [clearable]="false" formControlName='city' [loading]=loading>
+                        <ng-option value="">Please Select</ng-option>
+                        <ng-option *ngFor="let city of cities?.response" [value]="city?.id">{{city?.name}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-12 mb-2">
+                <div class="form-group">
+                    <label>Address</label>
+                    <input formControlName='address' type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-6 mb-2">
+                <div class="form-group">
+                    <label>Landline</label>
+                    <input formControlName='landline' type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-6 mb-2">
+                <div class="form-group">
+                    <label class="require">Mobile</label>
+                    <input formControlName='mobileNo' type="number" class="form-control" minlength="11" maxlength="14"
+                        [ngClass]="{'is-invalid': addForm.get('mobileNo')?.invalid && addForm.get('mobileNo')?.touched}"
+                        required>
+                    <div class="invalid-feedback">Mobile is Required!</div>
+                </div>
+            </div>
+            <div class="col-8 mb-2">
+                <div class="form-group">
+                    <label>Weblink</label>
+                    <input formControlName='weblink' type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-4 mb-2">
+                <div class="form-group">
+                    <label>Introduce On</label>
+                    <input formControlName='introduceOn' type="number" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-dark btn-label waves-effect waves-light rounded-pill"><i
+                class="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i> Save Changes</button>
+    </div>
+</form>

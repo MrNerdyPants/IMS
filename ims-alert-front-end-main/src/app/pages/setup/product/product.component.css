@@ -1,0 +1,39 @@
+h3{
+    font-size: .75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 14px;
+}
+.form-switch{
+    font-size: 17px;
+}
+.account-access h3{
+    padding-top: 7px;
+}
+.ng-select.disabled .ng-arrow-wrapper .ng-arrow {
+  display: none;
+}
+
+.ng-select.disabled ng-dropdown-panel {
+  display: none;
+}
+
+.ng-select.disabled .ng-clear-wrapper {
+  display: none;
+}
+select{
+  padding-left: 5px;
+}
+.fs-lg {
+  font-size: x-large;
+}
+.fs-large{
+  font-size: large !important;
+}
+.check-label {
+  padding-top: 11px !important;
+  padding-left: 9px !important;
+}
+.form-group{
+    margin-bottom: 0px;
+}

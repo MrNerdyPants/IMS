@@ -1,0 +1,33 @@
+<div class="modal-header text-center">
+    <h3 class="modal-title" id="exampleModalLabel">Add/ Edit Group</h3>
+    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"
+        (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body employeeDocImg">
+        <div class="row">
+            <div class="col-12 mb-2">
+                <div class="form-group">
+                    <label class="require">Group Name</label>
+                    <input formControlName='title' type="text" class="form-control"
+                        [ngClass]="{'is-invalid': addForm.get('title')?.invalid && addForm.get('title')?.touched}"
+                        required>
+                    <div class="invalid-feedback">Group is Required!</div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck" formControlName="activeStatus">
+                    <label class="form-check-label" for="invalidCheck">
+                        Active
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-dark btn-label waves-effect waves-light rounded-pill">
+            <i class="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i> Save Changes
+        </button>
+    </div>
+</form>

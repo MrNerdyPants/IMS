@@ -1,0 +1,9 @@
+package com.sys.ims.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.sys.ims.model.ProductSerial;
+
+public interface ProductSerialRepository extends JpaRepository<ProductSerial, Integer>{
+
+}

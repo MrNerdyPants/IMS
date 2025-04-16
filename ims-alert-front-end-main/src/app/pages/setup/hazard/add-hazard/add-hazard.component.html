@@ -1,0 +1,97 @@
+<div class="modal-header text-center">
+    <h3 class="modal-title" id="exampleModalLabel">Add/Edit Hazard</h3>
+    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"
+        (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body employeeDocImg">
+        <div class="row">
+            <div class="col-lg-12 mb-3">
+                <div class="form-group">
+                    <label class="require">Sub Category</label>
+                    <ng-select class="custom" [clearable]="false" required formControlName='subCategory'
+                        [loading]=loading [style]="addForm.get('subCategory')?.invalid &&(addForm.get('subCategory')?.dirty || addForm.get('subCategory')?.touched)?
+                                                    'border-color: #d9534f':''">
+                        <ng-option value="">Please Select</ng-option>
+                        <ng-option *ngFor="let data of subCategories?.response"
+                            [value]="data?.id">{{data?.name}}</ng-option>
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-lg-12 mb-3">
+                <div class="form-group">
+                    <label class="require">Type</label>
+                    <ng-select class="custom" [clearable]="false" required formControlName='type' [loading]=loading
+                        [style]="addForm.get('type')?.invalid &&(addForm.get('type')?.dirty || addForm.get('type')?.touched)?
+                                                    'border-color: #d9534f':''">
+                        <ng-option value="">Please Select</ng-option>
+                        <ng-option *ngFor="let data of types?.response" [value]="data?.id">{{data?.name}}</ng-option>
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-12 mb-2">
+                <div class="form-group">
+                    <label class="require">Code</label>
+                    <input formControlName='code' type="text" class="form-control"
+                        [ngClass]="{'is-invalid': addForm.get('code')?.invalid && addForm.get('code')?.touched}"
+                        required>
+                    <div class="invalid-feedback">Title is Required!</div>
+                </div>
+            </div>
+            <div class="col-12 mb-2">
+                <div class="form-group">
+                    <label>Description</label>
+                    <input formControlName='description' type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-12 mb-3">
+                <div formArrayName="symtoms" *ngFor="let symtom of getSymtoms.controls; let symtomsIndex = index;">
+                    <div class="form-group" [formGroupName]="symtomsIndex">
+                        <label class="require">Symtoms</label>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" formControlName='symtom'
+                                [ngClass]="{'is-invalid': symtom.get('symtom')?.invalid && symtom.get('symtom')?.touched}" />
+                            <div class="input-group-append btn-group">
+                                <button type="button" class="btn btn-dark btn-icon waves-effect" title="Add"
+                                    (click)="addSymtom()">
+                                    <i class="ri-add-fill"></i>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-icon waves-effect waves-light"
+                                    title="Remove" (click)="removeSymtom(symtomsIndex, symtom.get('id')?.value)">
+                                    <i class="ri-subtract-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-3">
+                <div formArrayName="correctives"
+                    *ngFor="let corrective of getCorrective.controls; let correctivesIndex = index;">
+                    <div class="form-group" [formGroupName]="correctivesIndex">
+                        <label class="require">Correctives</label>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" formControlName='corrective'
+                                [ngClass]="{'is-invalid': corrective.get('corrective')?.invalid && corrective.get('corrective')?.touched}" />
+                            <div class="input-group-append btn-group">
+                                <button type="button" class="btn btn-dark btn-icon waves-effect" title="Add"
+                                    (click)="addCorrective()">
+                                    <i class="ri-add-fill"></i>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-icon waves-effect waves-light"
+                                    title="Remove"
+                                    (click)="removeCorrective(correctivesIndex, corrective.get('id')?.value)">
+                                    <i class="ri-subtract-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-dark btn-label waves-effect waves-light rounded-pill"><i
+                class="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i> Save Changes</button>
+    </div>
+</form>

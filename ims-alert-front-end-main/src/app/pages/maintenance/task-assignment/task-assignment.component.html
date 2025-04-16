@@ -1,0 +1,71 @@
+<div class="main-body-content">
+    <div class="table-responsive-sm w-100 table-wrapper">
+        <table id="sailorTable" width="100%" class="table table-striped table-hover table-bordered"
+            style="border: 1px solid #dfe6e9;">
+            <thead class="light-background" style="border-bottom: 0px;">
+                <tr>
+                    <th class="text-center" width="5%">
+                        Sr.#
+                    </th>
+                    <th class="text-left" width="10%">
+                        Date
+                    </th>
+                    <th class="text-left" width="10%">
+                        Contract Validity
+                    </th>
+                    <th class="text-left" width="15%">
+                        Customer
+                    </th>
+                    <th class="text-left" width="17%">
+                        Product
+                    </th>
+
+                    <th class="text-left" width="8%">
+                        Status
+                    </th>
+                    <th class="text-left" width="8%">
+                        Employee
+                    </th>
+                    <th class="text-left" width="10%">
+                        Checklist
+                    </th>
+                    <th class="text-center" width="5%">
+                        Assign
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="!(getResults?.response?.length > 0)">
+                    <td colspan="10">No data found.</td>
+                </tr>
+                <ng-container *ngFor="let complaint of getResults?.response">
+                    <tr>
+                        <td class="fw-bold">{{complaint.complaintNumber}}</td>
+                        <td>{{complaint.date}}</td>
+                        <td>{{complaint?.contract?.expiry}}</td>
+                        <td>{{complaint?.customer?.name}}</td>
+                        <td>{{complaint?.product?.name}}</td>
+                        <td>{{complaint.status}}</td>
+                        <td>{{complaint?.employee?.name}}</td>
+                        <td><a class="link-text" style="cursor: pointer;" (click)="viewCheckList(complaint.detail);">View</a></td>
+                        <td *ngIf="complaint.status !== 'cancelled' && complaint.status !== 'completed'"
+                            class="text-center" (click)="assign(complaint);">
+                            <i class="ri-file-list-3-line" style="font-size: 18px;cursor: pointer;"></i>
+                        </td>
+                        <td *ngIf="complaint.status === 'cancelled' || complaint.status === 'completed'"></td>
+                        <td>
+                            <a class="link-text" style="cursor: pointer;" (click)="viewSummary(complaint.id)">View Summary</a>
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+        <!-- <footer class="position-relative">
+            <div class="fixed-bottom footer-inner">
+                <div class="position-fixed bottom-0 end-0 pb-2 pe-3">
+                    <button type="button" class="btn btnedge" (click)="onSave()">Save & Close</button>
+                </div>
+            </div>
+        </footer> -->
+    </div>
+</div>

@@ -1,0 +1,90 @@
+<div class="auth-page-wrapper">
+  <!-- auth page content -->
+  <div class="auth-page-content">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="text-center mt-sm-5 mb-4 text-white-50">
+                      <div>
+                          <a routerLink="/" class="d-inline-block auth-logo">
+                              <img src="assets/images/logo-dark.svg" alt="" height="100">
+                          </a>
+                      </div>
+                      <p class="mt-3 fs-15 fw-medium text-success">Health First Care Clinic</p>
+                  </div>
+              </div>
+          </div>
+          <!-- end row -->
+
+          <div class="row justify-content-center">
+              <div class="col-md-8 col-lg-6 col-xl-5">
+                  <div class="card mt-4">
+
+                      <div class="card-body">
+                          <div class="text-center mt-2">
+                              <h5 class="text-primary">Create New Account</h5>
+                          </div>
+                          <div class="p-2 mt-4">
+                              <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+                                <div class="mb-3">
+                                    <label for="firstname" class="form-label">First Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="firstname" placeholder="Enter firstname" required formControlName="firstname" [ngClass]="{ 'is-invalid': submitted && f['firstname'].errors }">
+                                    <div class="invalid-feedback">
+                                        Please enter First Name
+                                    </div>
+                                </div><div class="mb-3">
+                                    <label for="lastname" class="form-label">Last Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="lastname" placeholder="Enter lastname" required formControlName="lastname" [ngClass]="{ 'is-invalid': submitted && f['lastname'].errors }">
+                                    <div class="invalid-feedback">
+                                        Please enter Last Name
+                                    </div>
+                                </div>
+                                  <div class="mb-3">
+                                      <label for="useremail" class="form-label">Email <span class="text-danger">*</span></label>
+                                      <input type="email" class="form-control" id="useremail" placeholder="Enter email address" required formControlName="email" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
+                                      <div class="invalid-feedback">
+                                          Please enter email
+                                      </div>
+                                  </div>                                
+
+                                  <div class="mb-2">
+                                      <label for="userpassword" class="form-label">Password <span class="text-danger">*</span></label>
+                                      <input type="password" class="form-control" id="userpassword" placeholder="Enter password" required formControlName="password" [ngClass]="{ 'is-invalid': submitted && f['password'].errors }">
+                                      <div class="invalid-feedback">
+                                          Please enter password
+                                      </div>
+                                  </div>                            
+
+                                  <div class="mb-2">
+                                      <label for="matchingPassword" class="form-label">Password <span class="text-danger">*</span></label>
+                                      <input type="password" class="form-control" id="matchingPassword" placeholder="Please confirm password" required formControlName="matchPassword" [ngClass]="{ 'is-invalid': submitted && f['matchPassword'].errors }">
+                                      <div class="invalid-feedback">
+                                          Please confirm password / mismatched.
+                                      </div>
+                                  </div>
+                                
+                                  <div class="mt-4">
+                                      <button class="btn btn-success w-100" type="submit">Sign Up</button>
+                                  </div>
+                              </form>
+
+                          </div>
+                      </div>
+                      <!-- end card body -->
+                  </div>
+                  <!-- end card -->
+
+                  <div class="mt-4 text-center">
+                      <p class="mb-0">Already have an account ? <a routerLink="/auth/login" class="fw-semibold text-primary text-decoration-underline"> Signin </a> </p>
+                  </div>
+
+              </div>
+          </div>
+          <!-- end row -->
+      </div>
+      <!-- end container -->
+  </div>
+  <!-- end auth page content -->
+</div>
+<!-- end auth-page-wrapper -->
+<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>

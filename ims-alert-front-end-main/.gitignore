@@ -1,0 +1,19 @@
+# Compiled output
+/dist
+/tmp
+/out-tsc
+
+# Dependencies
+/node_modules
+
+# Angular specific
+/.angular
+
+# Testing
+/coverage
+
+# Logs
+/logs
+
+# Environment files
+.env

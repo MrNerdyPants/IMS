@@ -1,0 +1,36 @@
+<div class="modal-header text-center">
+    <h3 class="modal-title" id="exampleModalLabel">Edit Product Type</h3>
+    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"
+        (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<form [formGroup]="addProductTypeForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body employeeDocImg">
+        <div class="row">            
+            <div class="col-6 mb-1">
+                <label>Product Type</label>
+                <div class="form-group">
+                    <input formControlName='title' type="text" class="form-control" maxlength="32" aria-describedby="" />
+                </div>
+            </div>
+            <div class="col-3 mb-1">
+                <label>Code</label>
+                <div class="form-group">
+                    <input formControlName='code' type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="col-3 mb-1">
+                <label>Nature</label>                
+                <ng-select class="custom" [clearable]="false" formControlName='typeNature' [ngModel]="productType?.typeNature">
+                    <ng-option value="">Nature</ng-option>
+                    <ng-option *ngFor="let nature of productTypeNatures" [value]="nature?.title">{{nature?.title}}
+                    </ng-option>
+                </ng-select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-dark btn-label waves-effect waves-light rounded-pill">
+            <i class="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i> Save Changes
+        </button>
+    </div>
+</form>

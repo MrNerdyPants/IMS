@@ -1,0 +1,81 @@
+<div class="modal-header text-center">
+    <h3 class="modal-title" id="exampleModalLabel">Add Sub Category</h3>
+    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"
+        (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body employeeDocImg">
+        <div class="row">
+            <div class="col-lg-12 mb-3">
+                <div class="form-group">
+                    <label class="require">Category</label>
+                    <ng-select class="custom" [clearable]="false" required formControlName='parentId' [loading]=loading [ngModel]="parentId"
+                        [style]="addForm.get('parentId')?.invalid &&(addForm.get('parentId')?.dirty || addForm.get('parentId')?.touched)?
+                                                    'border-color: #d9534f':''">
+                        <ng-option value="">Please Select</ng-option>
+                        <ng-option *ngFor="let c of categories?.response" [value]="c?.id">{{c?.name}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-12 mb-2">
+                <div class="form-group">
+                    <label class="require">Sub Category Name</label>
+                    <input formControlName='title' type="text" class="form-control"
+                        [ngClass]="{'is-invalid': addForm.get('title')?.invalid && addForm.get('title')?.touched}"
+                        required>
+                    <div class="invalid-feedback">Sub Category Name is Required!</div>
+                </div>
+            </div>            
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck" formControlName="activeStatus">
+                    <label class="form-check-label" for="invalidCheck">
+                        Active
+                    </label>
+                </div>
+            </div>
+            <!-- <div class="col-12 mb-2" formArrayName="productType"
+                *ngFor="let type of getProductType.controls; let typeIndex = index;">
+                <div [formGroupName]="typeIndex">
+                    <div class="row">
+                        <div class="col-6 mb-1">
+                            <label>Product Type</label>
+                            <div class="form-group">
+                                <input formControlName='title' type="text" class="form-control" maxlength="32"
+                                    aria-describedby="" />
+                            </div>
+                        </div>
+                        <div class="col-3 mb-1">
+                            <label>Code</label>
+                            <div class="form-group">
+                                <input formControlName='code' type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-3 mb-1">
+                            <label>&nbsp;</label>
+                            <div class="form-group">
+                                <div class="input-group-append btn-group">
+                                    <button type="button" class="btn btn-dark btn-icon waves-effect" title="Add"
+                                        (click)="addProductType()">
+                                        <i class="ri-add-fill"></i>
+                                    </button>
+                                    <button *ngIf="typeIndex !== 0" type="button"
+                                        class="btn btn-danger btn-icon waves-effect waves-light" title="Remove"
+                                        (click)="removeProductType(typeIndex, type?.get('id')?.value)">
+                                        <i class="ri-subtract-line"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-dark btn-label waves-effect waves-light rounded-pill">
+            <i class="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i> Save Changes
+        </button>
+    </div>
+</form>

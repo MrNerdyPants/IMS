@@ -1,0 +1,16 @@
+<div class="modal-header text-center">
+    <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
+    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"
+      (click)="activeModal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-12 mb-3">
+        <p>Are you sure to delete this item?</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-dark btn-label waves-effect waves-light" (click)="confirmAction('YES')"><i class="ri-check-line label-icon align-middle fs-16 me-2"></i> Yes</button>
+    <button type="button" class="btn btn-danger btn-label waves-effect waves-light" (click)="activeModal.dismiss('NO')"><i class="ri-close-line label-icon align-middle fs-16 me-2"></i> No</button>   
+  </div>

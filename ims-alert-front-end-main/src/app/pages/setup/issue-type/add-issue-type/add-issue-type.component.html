@@ -1,0 +1,22 @@
+<div class="modal-header text-center">
+    <h3 class="modal-title" id="exampleModalLabel">Add Issue type</h3>
+    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"
+      (click)="activeModal.dismiss('Cross click')"></button>
+  </div>
+  <form [formGroup]="addStatus" (ngSubmit)="onSubmit()">
+    <div class="modal-body employeeDocImg">
+      <div class="row">
+        <div class="col-12 mb-2">
+          <div class="form-group">
+            <label class="require">Issue Type Title</label>
+            <input formControlName='title' type="text" class="form-control"
+              [ngClass]="{'is-invalid': addStatus.get('title')?.invalid && addStatus.get('title')?.touched}" required>
+            <div class="invalid-feedback">Issue Type Title is Required!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btnedge">Save changes</button>
+    </div>
+  </form>

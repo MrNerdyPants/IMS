@@ -1,0 +1,304 @@
+<app-breadcrumbs [title]="breadcrumbItemTitle" [breadcrumbItems]="breadCrumbItems"></app-breadcrumbs>
+<div class="filter-section mb-4">
+  <div class="row">
+    <div class="col-6 d-flex justify-content-start">
+      <h3 class="modal-title">{{breadcrumbItemTitle}}</h3>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xxl-12">
+    <!-- Nav tabs -->
+    <ul ngbNav #Colored="ngbNav" [activeId]="1" class="nav nav-pills nav-custom nav-custom-dark mb-3">
+      <li [ngbNavItem]="1">
+        <a ngbNavLink>
+          CheckList Type
+        </a>
+        <ng-template ngbNavContent>
+          <div class="filter-section mb-4">
+            <div class="row">
+              <div class="col-6 d-flex justify-content-start  align-items-center">
+                <h4 class="modal-title">CheckList Type</h4>
+              </div>
+              <div class="col-6 d-flex justify-content-end  align-items-center" *ngIf="isAdmin">
+                <button type="button" class="btn btn-dark btn-label waves-effect waves-light"
+                  (click)="openAddCheckListType()">
+                  <i class="ri-add-fill label-icon align-middle fs-16 me-2"></i> Add CheckList Type
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="items-section">
+            <div class="main-body-content">
+              <div class="table-responsive-sm">
+                <table id="sailorTable" width="100%" class="table table-striped table-hover align-middle"
+                  style="border: 1px solid #dfe6e9;">
+                  <thead class="light-background" style="border-bottom: 0px;">
+                    <tr>
+                      <th class="text-center" width="5%">Sr.No.</th>
+                      <th class="text-left">CheckList Type</th>
+                      <th class="text-center" colspan="2">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngIf="!checklistTypes?.response || checklistTypes?.response.legth === 0">
+                      <td class="text-left" colspan="3">
+                        <h6 class="modal-title">No data found.</h6>
+                      </td>
+                    </tr>
+                    <tr *ngFor="let data of checklistTypes?.response; index as i">
+                      <td class="text-center">{{i + 1}}</td>
+                      <td>{{data?.title}}</td>
+                      <td class="text-center">
+                        <div class="btn-group gap-3" *ngIf="isAdmin">
+                          <button type="button" class="btn btn-sm btn-dark btn-icon waves-effect" title="Edit"
+                            (click)="openEditCheckListType(data?.id, data?.title)">
+                            <i class="ri-edit-2-fill"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger btn-icon waves-effect waves-light"
+                            title="Delete" (click)="openDelete(data?.id, 'type')">
+                            <i class="ri-delete-bin-5-line"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="2">
+        <a ngbNavLink>
+          CheckList Category
+        </a>
+        <ng-template ngbNavContent>
+          <div class="filter-section mb-4">
+            <div class="row">
+              <div class="col-6 d-flex justify-content-start">
+                <h4 class="modal-title">CheckList Category</h4>
+              </div>
+              <div class="col-6 d-flex justify-content-end" *ngIf="isAdmin">
+                <button type="button" class="btn btn-dark btn-label waves-effect waves-light"
+                  (click)="openAddCheckListCategory()">
+                  <i class="ri-add-fill label-icon align-middle fs-16 me-2"></i> Add CheckList Category
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="items-section">
+            <div class="main-body-content">
+              <div class="table-responsive-sm">
+                <table id="sailorTable" width="100%" class="table table-striped table-hover align-middle"
+                  style="border: 1px solid #dfe6e9;">
+                  <thead class="light-background" style="border-bottom: 0px;">
+                    <tr>
+                      <th class="text-center" width="5%">Sr.No.</th>
+                      <th class="text-left">CheckListCategory</th>
+                      <th class="text-center" colspan="2">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngIf="!checkListCategory?.response || checkListCategory?.response.legth === 0">
+                      <td class="text-left" colspan="3">
+                        <h6 class="modal-title">No data found.</h6>
+                      </td>
+                    </tr>
+                    <tr *ngFor="let data of checkListCategory?.response; index as i">
+                      <td class="text-center">{{i + 1}}</td>
+                      <td>{{data?.title}}</td>
+                      <td class="text-center">
+                        <div class="btn-group gap-3" *ngIf="isAdmin">
+                          <button type="button" class="btn btn-sm btn-dark btn-icon waves-effect" title="Edit"
+                            (click)="openEditCheckListCategory(data?.id, data?.title)">
+                            <i class="ri-edit-2-fill"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger btn-icon waves-effect waves-light"
+                            title="Delete" (click)="openDelete(data?.id, 'category')">
+                            <i class="ri-delete-bin-5-line"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="3">
+        <a ngbNavLink>
+          Issue Types
+        </a>
+        <ng-template ngbNavContent>
+          <div class="filter-section mb-4">
+            <div class="row">
+              <div class="col-6 d-flex justify-content-start align-items-center">
+                <h4 class="modal-title">Issue Type</h4>
+              </div>
+              <div class="col-6 d-flex justify-content-end  align-items-center">
+                <button type="button" class="btn btn-dark btn-label waves-effect waves-light"
+                  (click)="openAddIssueType()">
+                  <i class="ri-add-fill label-icon align-middle fs-16 me-2"></i> Add Issue Type
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="items-section">
+            <div class="main-body-content">
+              <div class="table-responsive-sm">
+                <table id="sailorTable" width="100%" class="table table-striped table-hover align-middle"
+                  style="border: 1px solid #dfe6e9;">
+                  <thead class="light-background" style="border-bottom: 0px;">
+                    <tr>
+                      <th class="text-center" width="5%">Sr.No.</th>
+                      <th class="text-left" width="80%">Issue Type</th>
+                      <th class="text-center" colspan="2">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngIf="!issueTypes?.response || issueTypes?.response.legth === 0">
+                      <td class="text-left" colspan="3">
+                        <h6 class="modal-title">No data found.</h6>
+                      </td>
+                    </tr>
+                    <tr *ngFor="let data of issueTypes?.response; index as i">
+                      <td class="text-center">{{i + 1}}</td>
+                      <td>{{data?.name}}</td>
+                      <td class="text-center">
+                        <div class="btn-group gap-3">
+                          <button type="button" class="btn btn-sm btn-dark btn-icon waves-effect" title="Edit"
+                            (click)="openEditIssueType(data?.id, data?.name)">
+                            <i class="ri-edit-2-fill"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger btn-icon waves-effect waves-light"
+                            title="Delete" (click)="openDeleteIssueType(data?.id)">
+                            <i class="ri-delete-bin-5-line"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="4">
+        <a ngbNavLink>
+          CheckList
+        </a>
+        <ng-template ngbNavContent>
+          <div class="filter-section mb-4">
+            <div class="row">
+              <div class="col-6 d-flex justify-content-start align-items-center">
+                <h4 class="modal-title">CheckList</h4>
+              </div>
+              <div class="col-6 d-flex justify-content-end  align-items-center">
+                <button type="button" class="btn btn-dark btn-label waves-effect waves-light" (click)="openAddStatus()">
+                  <i class="ri-add-fill label-icon align-middle fs-16 me-2"></i> Add Checklist
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="items-section">
+            <div class="main-body-content">
+              <div class="table-responsive-sm">
+                <table id="sailorTable" width="100%" class="table table-striped table-hover align-middle"
+                  style="border: 1px solid #dfe6e9;">
+                  <thead class="light-background" style="border-bottom: 0px;">
+
+                  </thead>
+                  <tbody>
+
+                    <ng-container *ngFor="let type of checklistTypes?.response index as k">
+                      <tr>
+                        <td colspan="7" class="fw-bolder h4">{{type?.title}}</td>
+                      </tr>
+                      <tr class="table-dark">
+                        <th class="text-left" colspan="2">CheckList Category</th>
+                        <th class="text-left">Category</th>
+                        <th class="text-left">Issue Type</th>
+                        <th class="text-left">Active</th>
+                        <th class="text-center" colspan="2">Action</th>
+                      </tr>
+                      <ng-container *ngFor="let data of getResult?.response; index as c">
+                        <ng-container *ngIf="type?.id == data?.type?.id">
+                          <tr class="table-primary">
+                            <td colspan="2" class="fw-bolder">{{data?.checkListCategory?.title}}</td>
+                            <td class="text-left ">{{data?.category?.name}}</td>
+                            <td class="text-left">{{data?.issueType?.name}}</td>
+                            <td class="text-left">{{data?.activeInd === 'Y' ? 'Yes' : 'No'}}</td>
+                            <td class="text-center">
+                              <div class="btn-group gap-3">
+                                <button type="button" class="btn btn-sm btn-dark btn-icon waves-effect" title="Edit"
+                                  (click)="openEdit(data.id, data.list, data.activeInd,data?.type?.id, data.checkListCategory?.id, data.category?.id, data.issueType?.id)">
+                                  <i class="ri-edit-2-fill"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger btn-icon waves-effect waves-light"
+                                  title="Delete" (click)="openDelete(data?.id, 'list')">
+                                  <i class="ri-delete-bin-5-line"></i>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                          <ng-container *ngIf="data?.list?.length > 0">
+                            <tr>
+                              <td colspan="6" class="fw-bolder h6 ps-5">CheckList</td>
+                            </tr>
+                            <tr *ngFor="let chkList of data?.list; index as l">
+                              <td class="text-center ps-5">{{l + 1}}</td>
+                              <td class="text-left ps-5" colspan="5">{{chkList?.title}}</td>
+                            </tr>
+
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+
+                    <!-- <tr *ngIf="!getResult?.response || getResult?.response.legth === 0">
+                      <td class="text-left" colspan="4">
+                        <h6 class="modal-title">No data found.</h6>
+                      </td>
+                    </tr>
+                    <ng-container *ngFor="let data of getResult?.response; index as j">
+                      <tr>
+                        <td colspan="2">{{data?.checkListCategory?.title}}</td>
+                        <td>{{data?.category?.name}}</td>
+                        <td>{{data?.activeInd === 'Y' ? 'Yes' : 'No'}}</td>
+                      </tr>
+                      <tr *ngFor="let child of data?.list; index as i">
+                        <td class="text-center">{{i + 1}}</td>
+                        <td>{{data?.list?.[0].title}}</td>
+                        <td>{{data?.type?.title}}</td>
+                        <td class="text-center">
+                          <div class="btn-group gap-3">
+                            <button type="button" class="btn btn-sm btn-dark btn-icon waves-effect" title="Edit"
+                              (click)="openEdit(data.id, data.list, data.activeInd,data?.type?.id, data.checkListCategory?.id, data.category?.id, data.issueType?.id)">
+                              <i class="ri-edit-2-fill"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger btn-icon waves-effect waves-light"
+                              title="Delete" (click)="openDelete(data?.id, 'list')">
+                              <i class="ri-delete-bin-5-line"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </ng-container> -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+    </ul>
+    <div class="tab-content text-muted">
+      <div [ngbNavOutlet]="Colored"></div>
+    </div>
+  </div><!--end col-->
+</div><!--end row-->

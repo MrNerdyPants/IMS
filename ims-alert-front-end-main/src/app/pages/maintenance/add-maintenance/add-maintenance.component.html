@@ -1,0 +1,119 @@
+<form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <div class="accordion" id="accordionMain">
+        <div class="accordion-item">
+
+            <div id="collapseEmpInformation" class="accordion-collapse collapse show" aria-labelledby="empInformation"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row">
+                        <div class="col-3 mb-2">
+                            <div class="form-group">
+                                <label class="require">Date</label>
+                                <input formControlName='date' type="date" class="form-control"
+                                    [ngClass]="{'is-invalid': addForm.get('date')?.invalid && addForm.get('date')?.touched}"
+                                    required>
+                                <div class="invalid-feedback">Date is Required!</div>
+                            </div>
+                        </div>
+                        <div class="col-3 mb-3">
+                            <div class="form-group">
+                                <label class="require">Customer</label>
+                                <ng-select class="custom" [clearable]="false" required formControlName='customer'
+                                    [loading]=loading (change)="getAllProduct($event)" [style]="addForm.get('customer')?.invalid &&(addForm.get('customer')?.dirty || addForm.get('customer')?.touched)?
+                                                'border-color: #d9534f':''">
+                                    <ng-option value="">Please Select</ng-option>
+                                    <ng-option *ngFor="let c of customers?.response" [value]="c?.id">{{c?.name}}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-3 mb-3">
+                            <div class="form-group">
+                                <label class="require">Product</label>
+                                <ng-select class="custom" [clearable]="false" formControlName='product' required
+                                    [style]="addForm.get('product')?.invalid &&(addForm.get('product')?.dirty || addForm.get('product')?.touched)?
+                'border-color: #d9534f':''">
+                                    <ng-option value="">Please Select</ng-option>
+                                    <ng-option *ngFor="let p of products?.response" [value]="p?.id">{{p?.name}}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <!-- <div class="col-3 mb-3">
+                            <div class="form-group">
+                                <label class="require">Serial</label>
+                                <input type="text" class="form-control" formControlName='serial'
+                                                [ngClass]="{'is-invalid': addForm.get('serial')?.invalid && addForm.get('serial')?.touched}"
+                                                required />
+                            </div>
+                        </div> -->
+                        <!-- <div class="col-3 mb-3">
+                            <div class="form-group">
+                                <label class="require">Employee</label>
+                                <ng-select class="custom" [clearable]="false" required formControlName='employee'
+                                    [loading]=loading [style]="addForm.get('employee')?.invalid &&(addForm.get('employee')?.dirty || addForm.get('employee')?.touched)?
+                                                'border-color: #d9534f':''">
+                                    <ng-option value="">Please Select</ng-option>
+                                    <ng-option *ngFor="let c of employees?.response" [value]="c?.id">{{c?.name}}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="table-responsive-sm">
+                        <table id="sailorTable" width="100%" class="table table-striped table-hover align-middle"
+                            style="border: 1px solid #dfe6e9;">
+                            <thead class="light-background" style="border-bottom: 0px;">
+                                <tr>
+                                    <th>Checklist title</th>
+                                    <th>Pass/Fail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngFor="let type of issueType?.response">
+                                    <!-- <tr>
+                                        <td colspan="2">{{type?.name}}</td>
+                                    </tr> -->
+                                    <ng-container formArrayName="detail"
+                                        *ngFor="let detail of getDetail.controls; let checkListGroup = index;index as i">
+                                        <ng-container *ngIf="type?.id === detail.get('productType')?.value">
+                                            <tr *ngIf="i == 0 && type?.id === detail.get('productType')?.value">
+                                                <td colspan="2">{{type?.name}}</td>
+                                            </tr>
+                                            <tr>
+                                                <ng-container [formGroupName]="checkListGroup">
+                                                    <td>
+                                                        <input type="text" class="form-control" formControlName='title'
+                                                            [ngClass]="{'is-invalid': detail.get('title')?.invalid && detail.get('title')?.touched}"
+                                                            required readonly />
+                                                    </td>
+                                                    <td>
+                                                        <ng-select class="custom" [clearable]="false"
+                                                            formControlName='value' required [style]="detail.get('value')?.invalid &&(detail.get('value')?.dirty || detail.get('value')?.touched)?
+                'border-color: #d9534f':''">
+                                                            <ng-option value="N">No</ng-option>
+                                                            <ng-option value="Y">Yes</ng-option>
+                                                        </ng-select>
+                                                    </td>
+                                                </ng-container>
+                                            </tr>
+                                        </ng-container>
+                                    </ng-container>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="position-relative">
+        <div class="fixed-bottom footer-inner">
+            <div class="position-fixed bottom-0 end-0 pb-2 pe-3">
+                <button type="submit" class="btn btn-dark btn-label waves-effect waves-light rounded-pill"><i
+                        class="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </footer>
+</form>

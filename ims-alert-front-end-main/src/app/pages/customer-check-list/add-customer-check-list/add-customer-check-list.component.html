@@ -1,0 +1,97 @@
+<div class="modal-header text-center">
+  <h3 class="modal-title" id="exampleModalLabel">Add/Edit Customer CheckList</h3>
+  <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<form [formGroup]="addStatus" (ngSubmit)="onSubmit()">
+  <div class="modal-body employeeDocImg">
+    <div class="row">
+      <div class="col-lg-6 mb-3">
+        <div class="form-group">
+          <label class="require">Checklist For</label>
+          <ng-select class="custom" [clearable]="false" required formControlName='type' [loading]=loading [style]="addStatus.get('type')?.invalid &&(addStatus.get('type')?.dirty || addStatus.get('type')?.touched)?
+                                              'border-color: #d9534f':''">
+            <ng-option value="">Please Select</ng-option>
+            <ng-option *ngFor="let c of types?.response" [value]="c?.id">{{c?.title}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-lg-6 mb-3">
+        <div class="form-group">
+          <label class="require">Issue Type</label>
+          <ng-select class="custom" [clearable]="false" required formControlName='productType' [loading]=loading
+            [style]="addStatus.get('productType')?.invalid &&(addStatus.get('productType')?.dirty || addStatus.get('productType')?.touched)?
+                                            'border-color: #d9534f':''">
+            <ng-option value="">Please Select</ng-option>
+            <ng-option *ngFor="let c of issueType?.response" [value]="c?.id">{{c?.name}}
+            </ng-option>
+            <!-- <ng-option value="Electrical">Electrical</ng-option>
+                <ng-option value="Mechanical">Mechanical</ng-option>
+                <ng-option value="Software">Software</ng-option>
+                <ng-option value="Connectivity">Connectivity</ng-option>
+                <ng-option value="Operational">Operational</ng-option>
+                <ng-option value="Self-Testing">Self-Testing</ng-option>
+                <ng-option value="Miscellaneous">Miscellaneous</ng-option> -->
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-lg-6 mb-3">
+        <div class="form-group">
+          <label>Checklist Category</label>
+          <ng-select class="custom" [clearable]="false" formControlName='checkListCategory' [loading]=loading>
+            <ng-option value="">Please Select</ng-option>
+            <ng-option *ngFor="let c of checkListCategories?.response" [value]="c?.id">{{c?.title}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-6 mb-3">
+        <div class="form-group">
+          <label>Category</label>
+          <ng-select class="custom" [clearable]="false" formControlName='category' [loading]=loading>
+            <ng-option value="">Please Select</ng-option>
+            <ng-option *ngFor="let subCat of categories?.response" [value]="subCat?.id">{{subCat?.name}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="invalidCheck" formControlName="activeStatus">
+          <label class="form-check-label" for="invalidCheck">
+            <h5>Active</h5>
+          </label>
+        </div>
+      </div>
+      <div class="col-12 mb-2">
+        <div formArrayName="titles" *ngFor="let title of getTitles.controls; let titleGroup = index;">
+          <div class="form-group" [formGroupName]="titleGroup">
+            <label class="custom-lable require">Title</label>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" formControlName='title'
+                [ngClass]="{'is-invalid': title.get('title')?.invalid && title.get('title')?.touched}" />
+              <div class="form-group">
+                <div class="input-group-append btn-group">
+                  <button type="button" class="btn btn-dark btn-icon waves-effect" title="Add" (click)="addTitle()">
+                    <i class="ri-add-fill"></i>
+                  </button>
+                  <button type="button" class="btn btn-danger btn-icon waves-effect waves-light" title="Remove"
+                    (click)="removeTitle(titleGroup)">
+                    <i class="ri-subtract-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-dark btn-label waves-effect waves-light rounded-pill">
+      <i class="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i> Save Changes
+    </button>
+  </div>
+</form>

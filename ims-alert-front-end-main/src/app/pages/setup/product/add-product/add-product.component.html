@@ -1,0 +1,503 @@
+<app-breadcrumbs [title]="breadcrumbItemTitle" [breadcrumbItems]="breadCrumbItems"></app-breadcrumbs>
+<div class="filter-section mb-4">
+    <div class="row">
+        <div class="col-6 d-flex justify-content-start">
+            <h3 class="modal-title">{{breadcrumbItemTitle}}</h3>
+        </div>
+        <div class="col-6 d-flex justify-content-end">
+            <a type="button" class="btn btn-dark btn-label waves-effect waves-light" routerLink="/products">
+                <i class="ri-arrow-left-fill label-icon align-middle fs-16 me-2"></i> Back to Products
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<form [formGroup]="addForm" (ngSubmit)='onFormSubmit()'>
+
+    <div class="row">
+        <div class="col-xxl-12">
+            <ul ngbNav #Colored="ngbNav" [activeId]="1" class="nav nav-pills nav-custom nav-custom-dark mb-3">
+                <li [ngbNavItem]="1">
+                    <a ngbNavLink>
+                        Product
+                    </a>
+                    <ng-template ngbNavContent>
+                        <div class="row">
+                            <div class="col-6 d-flex justify-content-start">
+                                <h3 class="my-3">Product Information</h3>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 mb-3">
+                                        <div class="form-group">
+                                            <label class="require">Title</label>
+                                            <input formControlName='title' type="text" class="form-control"
+                                                maxlength="64"
+                                                [ngClass]="{'is-invalid' : addForm.get('title').invalid &&(addForm.get('title').dirty || addForm.get('title').touched) }"
+                                                aria-describedby="addon-wrapping" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 mb-1">
+                                        <div class="form-group">
+                                            <label class="require">Category</label>
+                                            <ng-select [clearable]="false" class="custom" formControlName='category'
+                                                required [style]="addForm.get('category').invalid
+                                             && (addForm.get('category').dirty || addForm.get('category').touched)?
+                                            'border-color: #d9534f':''"
+                                                (change)="loadSubCategory($event);getAllManufacturer($event);">
+                                                <ng-option value="">Please Select</ng-option>
+                                                <ng-option *ngFor="let data of allCategories?.response"
+                                                    [value]="data?.id">{{data?.name}}</ng-option>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 mb-1">
+                                        <div class="form-group">
+                                            <label class="require">Sub Category</label>
+                                            <ng-select [clearable]="false" class="custom" formControlName='subCategory'
+                                                required [style]="addForm.get('subCategory').invalid &&(addForm.get('subCategory').dirty || addForm.get('subCategory').touched)?
+                                            'border-color: #d9534f':''"
+                                                (change)="getAllFeature($event);getTypes($event);">
+                                                <ng-option value="">Please Select</ng-option>
+                                                <ng-option *ngFor="let data of allSubCategories"
+                                                    [value]="data?.id">{{data?.name}}</ng-option>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-4 mb-3">
+                                        <div class="form-group">
+                                            <label class="require">Product Type</label>
+                                            <ng-select [clearable]="false" class="custom" formControlName='productType'
+                                                required [style]="addForm.get('productType').invalid &&(addForm.get('productType').dirty || addForm.get('productType').touched)?
+                                            'border-color: #d9534f':''" (change)="updateProductNature($event)">
+                                                <ng-option value="">Please Select</ng-option>
+                                                <ng-option *ngFor="let data of productTypes"
+                                                    [value]="data?.id">{{data?.title
+                                                    + '
+                                                    [' + data?.code + ']'}}</ng-option>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-4 mb-3">
+                                        <div class="form-group">
+                                            <label class="require">Nature</label>
+                                            <input formControlName='productNature' type="text" class="form-control"
+                                                maxlength="64"
+                                                [ngClass]="{'is-invalid' : addForm.get('productNature').invalid &&(addForm.get('productNature').dirty || addForm.get('productNature').touched) }"
+                                                aria-describedby="addon-wrapping" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-4 mb-1">
+                                        <div class="form-group">
+                                            <label class="require">Manufacturer</label>
+                                            <ng-select [clearable]="false" class="custom" formControlName='manufacturer'
+                                                required [style]="addForm.get('manufacturer').invalid &&(addForm.get('manufacturer').dirty || addForm.get('manufacturer').touched)?
+                                            'border-color: #d9534f':''">
+                                                <ng-option value="">Please Select</ng-option>
+                                                <ng-option *ngFor="let data of allManufacturer?.response"
+                                                    [value]="data?.id">{{data?.name}}</ng-option>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 mb-3">
+                                        <div class="form-group">
+                                            <label>Features</label>
+                                            <ng-select [clearable]="false" class="custom" [multiple]="true"
+                                                formControlName='features'>
+                                                <ng-option *ngFor="let data of allFeature?.response"
+                                                    [value]="data?.id">{{data?.name}}</ng-option>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 mb-3">
+                                        <div class="form-group">
+                                            <label class="custom-lable">Short Description</label>
+                                            <textarea formControlName='description' type="text" class="form-control"
+                                                maxlength="128" aria-describedby=""></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 mb-3">
+                                        <div class="form-group">
+                                            <label class="custom-lable">Function Detail</label>
+                                            <textarea formControlName='functionDetail' type="text" class="form-control"
+                                                maxlength="1000" aria-describedby=""></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <div class="upload-section">
+                                                <label for="upload-btn"
+                                                    class="btn btn-dark btn-label waves-effect waves-light pointer">
+                                                    <i
+                                                        class="ri-attachment-line label-icon align-middle fs-16 me-2"></i>
+                                                    Upload
+                                                </label>
+                                                <p>Max Doc Size<strong>500kb</strong>.</p>
+                                                <input class="d-none" id="upload-btn" type="file"
+                                                    (change)="onDocSelect($event)" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive-lg">
+                                        <table class="table">
+                                            <thead style="border-bottom: 0px;">
+                                                <tr>
+                                                    <th class="text-left">DOCUMENT NAME</th>
+                                                    <th class="text-left">DESCRIPTION</th>
+                                                    <th>REMOVE</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody formArrayName="documents">
+
+                                                <tr
+                                                    *ngIf="!documents?.controls || documents?.controls?.values?.length === 0">
+                                                    <td class="text-left" colspan="3">
+                                                        <h6 class="my-3">No document attached.</h6>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngFor="let document of documents.controls; let i= index"
+                                                    formGroupName="{{i}}">
+                                                    <td>
+                                                        <input formControlName="fileNme" class="form-control" />
+                                                    </td>
+                                                    <td>
+                                                        <textarea formControlName="documentDesc"
+                                                            class="form-control textarea-normal"></textarea>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <div class="input-group-append btn-group">
+                                                                <button type="button"
+                                                                    class="btn btn-danger btn-label waves-effect waves-light pointer"
+                                                                    title="Remove" (click)="removeDocument(i)">
+                                                                    <i
+                                                                        class="ri-subtract-line label-icon align-middle fs-16 me-2"></i>
+                                                                    Remove
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <div formArrayName="videoLinks"
+                                            *ngFor="let videoLink of getVideoLinks.controls; let videoLinkGroup = index;">
+                                            <div class="form-group" [formGroupName]="videoLinkGroup">
+                                                <label class="custom-lable">Video Link</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control"
+                                                        formControlName='videoLink' />
+                                                    <div class="form-group">
+                                                        <div class="input-group-append btn-group">
+                                                            <button type="button"
+                                                                class="btn btn-dark btn-icon waves-effect" title="Add"
+                                                                (click)="addVideoLink()">
+                                                                <i class="ri-add-fill"></i>
+                                                            </button>
+                                                            <button type="button"
+                                                                class="btn btn-danger btn-icon waves-effect waves-light"
+                                                                title="Remove"
+                                                                (click)="removeVideoLink(videoLinkGroup)">
+                                                                <i class="ri-subtract-line"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="2">
+                    <a ngbNavLink>
+                        Models
+                    </a>
+                    <ng-template ngbNavContent>
+                        <div class="row">
+                            <div class="col-6 d-flex justify-content-start">
+                                <h3 class="my-3">Models</h3>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-lg-10 col-md-6 mb-1">
+                                        <div class="form-group">
+                                            <label class="require">Model</label>
+                                            <input formControlName='modelTitle' type="text" class="form-control"
+                                                maxlength="20"
+                                                [ngClass]="{'is-invalid' : addForm.get('modelTitle').invalid &&(addForm.get('modelTitle').dirty || addForm.get('modelTitle').touched) }"
+                                                aria-describedby="addon-wrapping" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-6 mb-1">
+                                        <div class="form-group">
+                                            <label>Warranty (Days)</label>
+                                            <input formControlName='warranty' type="number" class="form-control"
+                                                maxlength="16" aria-describedby="" />
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-12 mb-1 d-flex justify-content-end align-item-right">
+                                        <div class="form-group">
+                                            <label>&nbsp;</label>
+                                            <span class="input-group-text pointer" (click)="addMuduler()"><i
+                                                    class="fa fas fa-plus"></i> <span class="ms-2"> Add
+                                                    Muduler</span></span>
+                                        </div>
+                                    </div> -->
+                                    <div class="col-12" formArrayName="muduler"
+                                        *ngFor="let muduler of getMuduler.controls; let mudulerIndex = index;">
+                                        <div [formGroupName]="mudulerIndex">
+                                            <div class="row">
+                                                <div class="col-lg-9 col-md-6 mb-1">
+                                                    <div class="form-group">
+                                                        <label>Muduler</label>
+                                                        <input formControlName='title' type="text" class="form-control"
+                                                            maxlength="32" aria-describedby="" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2 col-md-6 mb-1">
+                                                    <div class="form-group">
+                                                        <label>Warranty (Days)</label>
+                                                        <input formControlName='warranty' type="number"
+                                                            class="form-control" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto mb-1">
+                                                    <label>&nbsp;</label>
+                                                    <div class="form-group">
+                                                        <div class="input-group-append btn-group">
+                                                            <button type="button"
+                                                                class="btn btn-dark btn-icon waves-effect" title="Add"
+                                                                (click)="addMuduler()">
+                                                                <i class="ri-add-fill"></i>
+                                                            </button>
+                                                            <button type="button"
+                                                                class="btn btn-danger btn-icon waves-effect waves-light"
+                                                                title="Remove" (click)="removeMuduler(mudulerIndex)">
+                                                                <i class="ri-subtract-line"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="3">
+                    <a ngbNavLink>
+                        Parameters
+                    </a>
+                    <ng-template ngbNavContent>
+                        <div class="row">
+                            <div class="col-6 d-flex justify-content-start">
+                                <h3 class="my-3">Parameters</h3>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- <div class="col-12 mb-1 d-flex justify-content-end align-item-right">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <span class="input-group-text pointer" (click)="addParameters()"><i
+                                                class="fa fas fa-plus"></i>
+                                            <span class="ms-2"> Add Parameter</span></span>
+                                    </div>
+                                </div> -->
+                                <div class="col-12" formArrayName="parameters"
+                                    *ngFor="let part of getParameters.controls; let parameterIndex = index;">
+                                    <div [formGroupName]="parameterIndex">
+                                        <div class="row">
+                                            <div class="col-3 mb-1">
+                                                <div class="form-group">
+                                                    <label>Title</label>
+                                                    <input formControlName='title' type="text" class="form-control"
+                                                        maxlength="64" aria-describedby="" />
+                                                </div>
+                                            </div>
+                                            <div class="col-2 mb-3">
+                                                <div class="form-group">
+                                                    <label>Description</label>
+                                                    <input formControlName='description' type="text"
+                                                        class="form-control" maxlength="64" aria-describedby="" />
+                                                </div>
+                                            </div>
+                                            <div class="col-2 mb-1">
+                                                <div class="form-group">
+                                                    <label>Std Value</label>
+                                                    <input formControlName='standerdValue' type="text"
+                                                        class="form-control" maxlength="16" aria-describedby="" />
+                                                </div>
+                                            </div>
+                                            <div class="col-2 mb-1">
+                                                <div class="form-group">
+                                                    <label>Min Range</label>
+                                                    <input formControlName='minRange' type="text" class="form-control"
+                                                        maxlength="16" aria-describedby="" />
+                                                </div>
+                                            </div>
+                                            <div class="col-2 mb-1">
+                                                <div class="form-group">
+                                                    <label>Max Range</label>
+                                                    <input formControlName='maxRange' type="text" class="form-control"
+                                                        maxlength="16" aria-describedby="" />
+                                                </div>
+                                            </div>
+                                            <div class="col-auto mb-1">
+                                                <label>&nbsp;</label>
+                                                <div class="form-group">
+                                                    <div class="input-group-append btn-group">
+                                                        <button type="button" class="btn btn-dark btn-icon waves-effect"
+                                                            title="Add" (click)="addParameters()">
+                                                            <i class="ri-add-fill"></i>
+                                                        </button>
+                                                        <button type="button"
+                                                            class="btn btn-danger btn-icon waves-effect waves-light"
+                                                            title="Remove" (click)="removeParameters(parameterIndex)">
+                                                            <i class="ri-subtract-line"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+
+                <li [ngbNavItem]="4">
+                    <a ngbNavLink>
+                        Spare Parts & Lubricants
+                    </a>
+                    <ng-template ngbNavContent>
+                        <div class="row">
+                            <div class="col-6 d-flex justify-content-start">
+                                <h3 class="my-3">Spare Parts & Lubricants</h3>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- <div class="col-12 mb-1 d-flex justify-content-end align-item-right">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <span class="input-group-text pointer" (click)="addParts()"><i
+                                                class="fa fas fa-plus"></i>
+                                            <span class="ms-2"> Add Part</span></span>
+                                    </div>
+                                </div> -->
+                                <div class="col-12" formArrayName="parts"
+                                    *ngFor="let part of getParts.controls; let partIndex = index;">
+                                    <div [formGroupName]="partIndex">
+                                        <div class="row">
+
+                                            <div class="col-lg-4 col-md-6 mb-1">
+                                                <div class="form-group">
+                                                    <label>Title</label>
+                                                    <input formControlName='title' type="text" class="form-control"
+                                                        maxlength="32" aria-describedby="" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-md-6 mb-1">
+                                                <div class="form-group">
+                                                    <label>Est. Life</label>
+                                                    <input formControlName='life' type="number" class="form-control"
+                                                        (input)="onlyInteger($event)" maxlength="16"
+                                                        aria-describedby="" />
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-lg-1 col-md-6 mb-1">
+                                                <div class="form-group">
+                                                    <label>Unit</label>
+                                                    <ng-select [clearable]="false" class="custom" formControlName='unit'>
+                                                        <ng-option value="">Please Select</ng-option>
+                                                        <ng-option *ngFor="let data of allUnit?.response"
+                                                            [value]="data?.id">{{data?.name}}</ng-option>
+                                                    </ng-select>
+                                                </div>
+                                            </div> -->
+                                            <!-- <div class="col-lg-2 col-md-6 mb-1">
+                                                <div class="form-group">
+                                                    <label>Period</label>
+                                                    <ng-select [clearable]="false" class="custom" formControlName='period'>
+                                                        <ng-option value="">Please Select</ng-option>
+                                                        <ng-option value='weeks'>Weeks</ng-option>
+                                                        <ng-option value="months">Months</ng-option>
+                                                        <ng-option value="years">Years</ng-option>
+                                                    </ng-select>
+                                                </div>
+                                            </div> -->
+                                            <div class="col-lg-3 col-md-6 mb-1">
+                                                <div class="form-group">
+                                                    <label>Date</label>
+                                                    <input formControlName='date' type="date" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-md-6 mb-1">
+                                                <div class="form-group">
+                                                    <label>Reading</label>
+                                                    <input formControlName='reading' type="number" class="form-control"
+                                                        (input)="onlyInteger($event)" maxlength="16"
+                                                        aria-describedby="" />
+                                                </div>
+                                            </div>
+                                            <div class="col-auto mb-1">
+                                                <label>&nbsp;</label>
+                                                <div class="form-group">
+                                                    <div class="input-group-append btn-group">
+                                                        <button type="button" class="btn btn-dark btn-icon waves-effect"
+                                                            title="Add" (click)="addParts()">
+                                                            <i class="ri-add-fill"></i>
+                                                        </button>
+                                                        <button type="button"
+                                                            class="btn btn-danger btn-icon waves-effect waves-light"
+                                                            title="Remove" (click)="removeParts(partIndex)">
+                                                            <i class="ri-subtract-line"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="form-group">
+                                                    <label>&nbsp;</label>
+                                                    <span class="input-group-text pointer"
+                                                        (click)="removeParts(partIndex)"><i
+                                                            class="fa fas fa-minus"></i></span>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+            <div class="tab-content text-muted">
+                <div [ngbNavOutlet]="Colored"></div>
+            </div>
+        </div>
+    </div>
+    <footer class="position-relative">
+        <div class="fixed-bottom footer-inner">
+            <div class="position-fixed bottom-0 end-0 pb-2 pe-3">
+                <button (click)="saveProduct()" class="btn btn-dark btn-label waves-effect waves-light rounded-pill"><i
+                        class="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i> Save Product
+                </button>
+            </div>
+        </div>
+    </footer>
+</form>

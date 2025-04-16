@@ -1,0 +1,86 @@
+<div class="main-body-content">
+    <div class="row mb-3">
+        <div class="col-lg-3 col-sm-6">
+            <label class="custom-lable">Groups</label>
+            <ng-select [clearable]="false" class="custom" [multiple]="false" [(ngModel)]="group"
+                (change)="getAllRoleRightWithRoleId()">
+                <ng-option value="">All</ng-option>
+                <ng-option *ngFor="let group of allGroups?.response" [value]="group.id">
+                    {{group.name}}
+                </ng-option>
+            </ng-select>
+        </div>
+    </div>
+    <div class="table-responsive-sm w-100 table-wrapper" style="overflow-y: scroll">
+        <table id="sailorTable" width="100%" class="table table-striped table-hover table-bordered"
+            style="border: 1px solid #dfe6e9;">
+            <thead class="light-background" style="border-bottom: 0px;">
+                <tr>
+                    <th class="text-left">
+                        Modules
+                    </th>
+                    <th class="text-left" width="10%">
+                        All<br>
+                    </th>
+                    <th class="text-left" width="10%">
+                        Can Edit<br>
+                        <input type="checkbox" (change)="checkAll('canEdit',$event)">
+                    </th>
+                    <th class="text-left" width="10%">
+                        Can Delete<br>
+                        <input type="checkbox" (change)="checkAll('canDelete',$event)">
+                    </th>
+                    <th class="text-left" width="10%">
+                        Can Export<br>
+                        <input type="checkbox" (change)="checkAll('canExport',$event)">
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let parent of parentsModule?.response">
+                    <tr>
+                        <td class="fw-bold">{{parent.name}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <ng-container *ngFor="let right of parent?.children">
+                        <tr>
+                            <td class="ps-5">{{right.name}}</td>
+                            <td>
+                                <label class="form-radio">
+                                    <input type="checkbox" (change)="onCheckboxSelected(right, $event)"
+                                        [checked]="markIt(right)">
+                                </label>
+                            </td>
+                            <td><label class="form-radio">
+                                    <input type="checkbox" (change)="onCheck('canEdit',right, $event)"
+                                        [checked]="right?.canEdit==='Y'?true:false">
+                                </label></td>
+                            <td><label class="form-radio">
+                                    <input type="checkbox" (change)="onCheck('canDelete',right, $event)"
+                                        [checked]="right?.canDelete==='Y'?true:false">
+                                </label></td>
+                            <td><label class="form-radio">
+                                    <input type="checkbox" (change)="onCheck('canExport',right, $event)"
+                                        [checked]="right?.canExport==='Y'?true:false">
+                                </label></td>
+                        </tr>
+                    </ng-container>
+                </ng-container>
+            </tbody>
+        </table>
+        <footer class="position-relative">
+            <div class="fixed-bottom footer-inner">
+                <div class="position-fixed bottom-0 end-0 pb-2 pe-3">
+                    <button type="button" (click)="onSave()"
+                        class="btn btn-dark btn-label waves-effect waves-light rounded-pill">
+                        <i class="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i> Save
+                        Changes
+                    </button>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
