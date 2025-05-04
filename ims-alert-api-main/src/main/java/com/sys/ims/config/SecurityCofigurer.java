@@ -40,6 +40,7 @@ public class SecurityCofigurer {
 
         http.csrf().disable().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().authorizeRequests()
                 .antMatchers("/api/auth/authenticate").permitAll()
+                .antMatchers("/api/nauth/login").permitAll()
                 .antMatchers("/api/auth/sign-up").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
@@ -61,4 +62,6 @@ public class SecurityCofigurer {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
 }

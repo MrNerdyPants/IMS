@@ -1,10 +1,15 @@
 package com.sys.ims.service.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sys.ims.model.Right;
+import com.sys.ims.enums.UserStatus;
+import com.sys.ims.enums.UserType;
+import com.sys.ims.model.NUser;
+import com.sys.ims.model.Permission;
 import com.sys.ims.model.User;
 import com.sys.ims.model.UserRight;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,8 +18,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
     private String id;
@@ -23,22 +32,20 @@ public class UserDetailsImpl implements UserDetails {
 
     private String username;
     private String type;
-    private String email;
+
     private String refId;
-    private String fullName;
+
     private String profile;
     private int companyId;
-    @JsonIgnore
-    private String password;
 
     private Set<UserRight> rights = new HashSet<>();
 
-    private Collection<? extends GrantedAuthority> authorities;
+//    private Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(
             String id, String username, String password,
-            Collection<? extends GrantedAuthority> authorities,Set<UserRight> rights,int companyId,
-            String profile, String fullName,String type,String refId,String email
+            Collection<? extends GrantedAuthority> authorities, Set<UserRight> rights, int companyId,
+            String profile, String fullName, String type, String refId, String email
     ) {
         this.id = id;
         this.username = username;
@@ -79,7 +86,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getType(),
                 user.getRefId(),
                 user.getEmail()
-            );
+        );
     }
 
 
@@ -109,30 +116,6 @@ public class UserDetailsImpl implements UserDetails {
         return password;
     }
 
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 
     public String getFullName() {
         return fullName;
@@ -150,7 +133,7 @@ public class UserDetailsImpl implements UserDetails {
         return rights;
     }
 
-    
+
     public void setRights(Set<UserRight> rights) {
         this.rights = rights;
     }
@@ -165,5 +148,114 @@ public class UserDetailsImpl implements UserDetails {
 
     public String getEmail() {
         return email;
+    }
+
+
+    private UUID uuid;
+    private String email;
+    private String fullName;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+
+    @JsonIgnore
+    private String password;
+
+    private Collection<? extends GrantedAuthority> authorities;
+
+    private UserType userType;
+    private UserStatus status;
+
+    public static UserDetailsImpl build(NUser user) {
+        Set<GrantedAuthority> authorities = user.getRoles().stream()
+                .flatMap(role -> role.getPermissions().stream())
+                .map(Permission::getCode)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
+
+        return new UserDetailsImpl(
+                user.getId(),
+                user.getEmail(),
+                user.getFullName(),
+                user.getPasswordHash(),
+                authorities,
+                user.getUserType(),
+                user.getStatus(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getPhone()
+        );
+    }
+
+    public UserDetailsImpl(
+            UUID uuid,
+            String email,
+            String fullName,
+            String passwordHash,
+            Collection<? extends GrantedAuthority> authorities,
+            UserType type,
+            UserStatus userStatus
+    ) {
+        this.uuid = uuid;
+        this.email = email;
+        this.fullName = fullName;
+        this.password = passwordHash;
+        this.authorities = authorities;
+        this.userType = type;
+        this.status = userStatus;
+
+
+    }
+
+    public UserDetailsImpl(
+            UUID uuid,
+            String email,
+            String fullName,
+            String passwordHash,
+            Collection<? extends GrantedAuthority> authorities,
+            UserType type,
+            UserStatus userStatus,
+            String firstName,
+            String lastName,
+            String phoneNumber
+    ) {
+        this.uuid = uuid;
+        this.email = email;
+        this.fullName = fullName;
+        this.password = passwordHash;
+        this.authorities = authorities;
+        this.userType = type;
+        this.status = userStatus;
+        this.firstName= firstName;
+        this.lastName= lastName;
+        this.phoneNumber = phoneNumber;
+
+
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return status != UserStatus.DEACTIVATED;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return status != UserStatus.DEACTIVATED;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return status == UserStatus.ACTIVE;
     }
 }
