@@ -67,5 +67,21 @@ public class RecordDTOs {
     ) {
     }
 
+    public record SignupRequest(
+            String email,
+            String phone,
+            String password,
+            String fullName,
+            String profilePicture,
+            String userType, // "CLIENT_ADMIN", "CLIENT_EMPLOYEE", etc.
+
+            // Optional fields based on user type
+            UUID clientId,         // For employees/customers
+            UUID branchId,         // For employees
+            UUID departmentId,     // For employees
+            UUID designationId,    // For employees
+            UUID customerId        // If creating internal user for a customer
+    ) {}
+
 
 }

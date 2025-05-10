@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -46,5 +47,7 @@ public interface NRoleRepository extends JpaRepository<NRole, UUID> {
     // Get all roles with a specific permission code
     @Query("SELECT r FROM NRole r JOIN r.permissions p WHERE p.code = :permissionCode")
     List<NRole> findByPermissionCode(String permissionCode);
+
+//    Optional<Set<NRole>> findByName(String name);
 
 }
