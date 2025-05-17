@@ -122,4 +122,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         propertyError.put("message",ex.getMessage());
         return new ResponseEntity<>(utility.buildApiResponse(HttpStatus.CONFLICT.value(), ex.getMessage(),propertyError ), HttpStatus.OK);
     }
+
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+        return new ResponseEntity<>(utility.buildApiResponse(HttpStatus.CONFLICT.value(), Constants.USER_ALREADY_EXISTS, ex.getMessage()), HttpStatus.CONFLICT);
+
+    }
 }

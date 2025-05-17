@@ -64,8 +64,8 @@ public class ClientCustomerSignupStrategy implements SignupStrategy {
                 .fullName(request.fullName())
                 .email(request.email())
                 .phone(request.phone())
-                .address(request.address())
-                .nationalId(request.nationalId())
+//                .address(request.address())
+//                .nationalId(request.nationalId())
                 .createdAt(LocalDateTime.now())
                 .build();
 

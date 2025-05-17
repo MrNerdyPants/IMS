@@ -3,6 +3,7 @@ package com.sys.ims.service.impl;
 import com.sys.ims.dto.RecordDTOs.SignupRequest;
 import com.sys.ims.enums.UserStatus;
 import com.sys.ims.enums.UserType;
+import com.sys.ims.exception.BaseException;
 import com.sys.ims.model.NUser;
 import com.sys.ims.repository.NRoleRepository;
 import com.sys.ims.repository.NUserRepository;
@@ -48,13 +49,13 @@ public class ClientAdminSignupStrategy implements SignupStrategy {
     }
 
     @Override
-    public void signup(SignupRequest request, NUser creator) {
+    public void signup(SignupRequest request, NUser creator) throws BaseException {
         if (creator == null || creator.getUserType() != UserType.SUPER_ADMIN) {
             throw new AccessDeniedException("Only SuperAdmin can create ClientAdmins");
         }
 
         if (userRepository.existsByEmail(request.email())) {
-            throw new ConflictException("Email already taken");
+            throw new BaseException("Email already taken");
         }
 
         NUser newUser = NUser.builder()

@@ -95,6 +95,12 @@ public class UserDetailsImpl implements UserDetails {
         return authorities;
     }
 
+    public void setAuthorities(Set<UserRight> userRights) {
+        this.authorities = userRights.stream()
+                .map(userRight -> new SimpleGrantedAuthority(userRight.getRight().getName()))
+                .collect(Collectors.toSet());
+    }
+
     public int getCompanyId() {
         return companyId;
     }

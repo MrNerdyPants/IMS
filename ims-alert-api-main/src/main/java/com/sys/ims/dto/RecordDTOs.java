@@ -1,5 +1,7 @@
 package com.sys.ims.dto;
 
+import com.sys.ims.model.*;
+
 import java.util.UUID;
 
 /**
@@ -76,11 +78,11 @@ public class RecordDTOs {
             String userType, // "CLIENT_ADMIN", "CLIENT_EMPLOYEE", etc.
 
             // Optional fields based on user type
-            UUID clientId,         // For employees/customers
-            UUID branchId,         // For employees
-            UUID departmentId,     // For employees
-            UUID designationId,    // For employees
-            UUID customerId        // If creating internal user for a customer
+            Client clientId,         // For employees/customers
+            Branch branchId,         // For employees
+            NDepartment departmentId,     // For employees
+            NDesignation designationId,    // For employees
+            NCustomer customerId        // If creating internal user for a customer
     ) {}
 
 

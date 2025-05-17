@@ -11,6 +11,9 @@ public class Constants {
     public static final String ADMIN_USER = "ADMIN";
     public static final String USER_USER = "USER";
     public static final String RECORD_NOT_FOUND = "Record not found";
+
+    public static final String USER_ALREADY_EXISTS = "User Already Exists";
+
     public static final String USER_ALREADY_EXIST = "User Already exist";
     public static final String UPLOAD_DIR = "./uploads/";
     public static final String CV_FILE_PROPERTY = "cvFile";

@@ -75,6 +75,28 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, Constants.SECRET_KEY).compact();
     }
 
+//    private String createToken(UserDetailsImpl userDetails) {
+//        Map<String, Object> claims = new HashMap<>();
+//        claims.put("id", userDetails.getId());
+//        claims.put("companyId", userDetails.getCompanyId());
+//        claims.put("fullName", userDetails.getFullName());
+//        claims.put("email", userDetails.getEmail());
+//
+//        // Add roles to claims
+//        List<String> roles = userDetails.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.toList());
+//        claims.put("roles", roles);
+//
+//        return Jwts.builder()
+//                .setSubject(userDetails.getUsername())
+//                .setIssuedAt(new Date(System.currentTimeMillis()))
+//                .setClaims(claims)
+//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+//                .signWith(SignatureAlgorithm.HS256, Constants.SECRET_KEY)
+//                .compact();
+//    }
+
     public boolean validateJwtToken(String authToken, HttpServletRequest request) {
         try {
             Jwts.parser().setSigningKey(Constants.SECRET_KEY).parseClaimsJws(authToken);
