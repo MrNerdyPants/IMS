@@ -90,6 +90,7 @@ import { EditProductTypeComponent } from './category/edit-product-type/edit-prod
 import { UserRightsComponent } from './user-rights/user-rights.component';
 import { UserTypeComponent } from './user-type/user-type.component';
 import { AddUserTypeComponent } from './user-type/add-user-type/add-user-type.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -163,7 +164,8 @@ import { AddUserTypeComponent } from './user-type/add-user-type/add-user-type.co
     EditProductTypeComponent,
     UserRightsComponent,
     UserTypeComponent,
-    AddUserTypeComponent
+    AddUserTypeComponent,
+    ProfileComponent
   ],
   imports: [
     CommonModule,

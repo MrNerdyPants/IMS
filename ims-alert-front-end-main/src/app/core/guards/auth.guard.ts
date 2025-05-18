@@ -32,13 +32,13 @@ export class AuthGuard {
 
             child.url = (child.url.split("/").length > 1 ? child.url.split("/")[1] : "")
             child.url = child.url.replace("-", " ");
-            if (state.url.includes(child.url)) {
-              return true;
+            // if (state.url.includes(child.url)) {
+              // }
             }
           }
-        }
-        this.route.navigate(['/access-denied']);
-        return false;
+          return true;
+        // this.route.navigate(['/access-denied']);
+        // return false;
       } else {
         return true;
       }

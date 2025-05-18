@@ -1,0 +1,40 @@
+<form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body employeeDocImg">
+        <div class="row">
+            <!-- <div class="col-6 mb-3">
+                <img *ngIf="fileData || editData"
+                    src="data:image/png;base64,{{fileData ? fileData : editData?.logo }}" class="profile-pic"
+                    style="width: 115px;height: 115px;" alt="profile" (error)="errorHandler($event)" />
+            </div> -->
+            <!-- <div class="col-6 mb-3">
+                <div class="form-group">
+                    <label for="file">Choose Logo</label>
+                    <input type="file" id="file" class="form-control" accept=".png, .jpg, .jpeg"
+                        (change)="onFileSelect($event)" />
+                </div>
+            </div> -->
+            <div class="col-7 mb-2">
+                <div class="form-group">
+                    <label class="require">Name <span class="text-danger">*</span></label>
+                    <input formControlName='name' type="text" class="form-control"
+                        [ngClass]="{'is-invalid': addForm.get('name')?.invalid && addForm.get('name')?.touched}"
+                        required>
+                    <div class="invalid-feedback"> Name is Required!</div>
+                </div>
+            </div>
+            <div class="col-5 mb-2">
+                <div class="form-group">
+                    <label class="require">Phone <span class="text-danger">*</span></label>
+                    <input formControlName='phone' type="text" class="form-control"
+                        [ngClass]="{'is-invalid': addForm.get('phone')?.invalid && addForm.get('phone')?.touched}"
+                        required>
+                    <div class="invalid-feedback">Phone number is Required!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-dark btn-label waves-effect waves-light rounded-pill" [disabled]="addForm.invalid"><i
+                class="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i> Save Changes</button>
+    </div>
+</form>
