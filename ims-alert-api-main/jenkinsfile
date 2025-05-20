@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'git@github.com:MrNerdyPants/ims-alert-api.git'
+                git branch: 'release', url: 'git@github.com:MrNerdyPants/IMS.git'
             }
         }
 
