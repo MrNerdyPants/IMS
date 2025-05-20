@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         MAVEN_HOME = tool 'Maven'
-        DB_URL = 'jdbc:postgresql://localhost:5432/ims_alert_db'
+        DB_URL = 'jdbc:postgresql://localhost:5432/ims'
         DB_USER = 'postgres'
         DB_PASS = 'password'
         JAR_PATH = 'target/ims-0.0.1.jar'
