@@ -73,7 +73,7 @@ pipeline {
                             echo "🚀 Starting application..."
                             sh """
                                 export JENKINS_NODE_COOKIE=dontKillMe
-                                nohup setsid java -jar ${JAR_PATH} --spring.profiles.active=local > app.log 2>&1 &
+                                nohup setsid java -jar ${JAR_PATH} --spring.profiles.active=prod > app.log 2>&1 &
                                 echo \$! > ${PID_FILE}
                             """
                             sleep 15
