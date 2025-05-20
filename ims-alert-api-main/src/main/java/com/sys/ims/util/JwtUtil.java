@@ -3,6 +3,7 @@ package com.sys.ims.util;
 import com.sys.ims.service.impl.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,11 +11,15 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -59,6 +64,9 @@ public class JwtUtil {
         map.put("id",userDetails.getId());
         map.put("companyId", userDetails.getCompanyId());
         map.put("fullName", userDetails.getFullName());
+        map.put("email", userDetails.getEmail());
+        map.put("roles", userDetails.getAuthorities());
+
         Jwts.builder();
         return Jwts.builder().setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -66,6 +74,28 @@ public class JwtUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, Constants.SECRET_KEY).compact();
     }
+
+//    private String createToken(UserDetailsImpl userDetails) {
+//        Map<String, Object> claims = new HashMap<>();
+//        claims.put("id", userDetails.getId());
+//        claims.put("companyId", userDetails.getCompanyId());
+//        claims.put("fullName", userDetails.getFullName());
+//        claims.put("email", userDetails.getEmail());
+//
+//        // Add roles to claims
+//        List<String> roles = userDetails.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.toList());
+//        claims.put("roles", roles);
+//
+//        return Jwts.builder()
+//                .setSubject(userDetails.getUsername())
+//                .setIssuedAt(new Date(System.currentTimeMillis()))
+//                .setClaims(claims)
+//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+//                .signWith(SignatureAlgorithm.HS256, Constants.SECRET_KEY)
+//                .compact();
+//    }
 
     public boolean validateJwtToken(String authToken, HttpServletRequest request) {
         try {
@@ -117,6 +147,50 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, Constants.SECRET_KEY).compact();
         }
         return "Token has " + result + " left to expire";
+    }
+
+
+    public String generateJwtToken(Authentication authentication) {
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+
+        List<String> roles = userPrincipal.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        return Jwts.builder()
+                .setSubject(userPrincipal.getId().toString())
+                .claim("email", userPrincipal.getEmail())
+                .claim("roles", roles)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .signWith(SignatureAlgorithm.HS512, Constants.SECRET_KEY)
+                .compact();
+    }
+
+    public String getUserIdFromJwtToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(Constants.SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    public boolean validateJwtToken(String authToken) {
+        try {
+            Jwts.parser().setSigningKey(Constants.SECRET_KEY).parseClaimsJws(authToken);
+            return true;
+        } catch (JwtException e) {
+            return false;
+        }
+    }
+
+    public String getEmailFromJwtToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(Constants.SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.get("email", String.class); // 👈 Custom claim "email"
     }
 
 }

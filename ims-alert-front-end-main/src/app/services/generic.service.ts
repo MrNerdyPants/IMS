@@ -31,6 +31,16 @@ export class GenericService {
       }));
   }
 
+  putData(url: any, obj: any): Observable<any> {
+    // obj['companyId'] = this.getCompanyId();
+    // obj['updatedBy'] = this.getUserId();
+    // obj['createdBy'] = this.getUserId();
+    return this.http.put<any>(environment.apiUrl + url, obj)
+      .pipe(map(list => {
+        return list;
+      }));
+  }
+
   deleteData(url: any): Observable<any> {
     return this.http.delete<any>(environment.apiUrl + url)
       .pipe(map(list => {

@@ -2,19 +2,19 @@ package com.sys.ims.service.impl;
 
 import com.sys.ims.dto.AssignGroupDto;
 import com.sys.ims.dto.AssignSiteDto;
-import com.sys.ims.exception.BaseException;
 import com.sys.ims.dto.UserDto;
-import com.sys.ims.dto.UserSaveDto;
+import com.sys.ims.exception.BaseException;
 import com.sys.ims.model.Company;
 import com.sys.ims.model.Group;
 import com.sys.ims.model.GroupRight;
-import com.sys.ims.model.Right;
+import com.sys.ims.model.NUser;
 import com.sys.ims.model.User;
 import com.sys.ims.model.UserGroup;
 import com.sys.ims.model.UserRight;
 import com.sys.ims.repository.CompanyRepository;
 import com.sys.ims.repository.GroupRepository;
 import com.sys.ims.repository.GroupRightRepository;
+import com.sys.ims.repository.NUserRepository;
 import com.sys.ims.repository.RightRepository;
 import com.sys.ims.repository.UserGroupRepository;
 import com.sys.ims.repository.UserRepository;
@@ -30,14 +30,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.security.core.userdetails.UserDetailsService;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.Collector;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,11 +65,21 @@ public class MyUserDetailsService implements UserDetailsService, UserService {
                 .map(userGroup -> userGroup.getGroup().getId()).map(String::valueOf).collect(Collectors.toList());
     }
 
+//    @Override
+//    public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
+//        User currentUser = usersRepository.findByUsername(username)
+//                .orElseThrow(() -> new UsernameNotFoundException("User Not Found for the username: " + username));
+//        return UserDetailsImpl.build(currentUser);
+//    }
+
+    private final NUserRepository nUserRepository;
+
     @Override
-    public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
-        User currentUser = usersRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found for the username: " + username));
-        return UserDetailsImpl.build(currentUser);
+    public UserDetailsImpl loadUserByUsername(String email) throws UsernameNotFoundException {
+        NUser user = nUserRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
+        return UserDetailsImpl.build(user);
     }
 
     @Override

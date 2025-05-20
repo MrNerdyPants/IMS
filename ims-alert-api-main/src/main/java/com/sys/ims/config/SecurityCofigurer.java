@@ -3,6 +3,7 @@ package com.sys.ims.config;
 import com.sys.ims.filters.JwtAuthenticationEntryPoint;
 import com.sys.ims.filters.JwtRequestFilter;
 import com.sys.ims.service.impl.MyUserDetailsService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,12 +41,20 @@ public class SecurityCofigurer {
 
         http.csrf().disable().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().authorizeRequests()
                 .antMatchers("/api/auth/authenticate").permitAll()
+                .antMatchers("/api/nauth/login").permitAll()
+                .antMatchers("/api/nauth/signup").permitAll()
+
                 .antMatchers("/api/auth/sign-up").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/v3/api-docs/**").permitAll()
                 .antMatchers("/actuator").permitAll()
                 .antMatchers("/actuator/**").permitAll()
+                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/super-admin/**").hasRole("SUPER_ADMIN")
+                .antMatchers("/api/client-admin/**").hasRole("CLIENT_ADMIN")
+                .antMatchers("/api/client-employee/**").hasAnyRole("CLIENT_EMPLOYEE", "CLIENT_ADMIN")
+                .antMatchers("/api/client-customer/**").hasRole("CLIENT_CUSTOMER")
                 .anyRequest().authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authenticationManager(authenticationManager);
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class).headers().frameOptions().sameOrigin().cacheControl();
@@ -61,4 +70,12 @@ public class SecurityCofigurer {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        // Add any custom configuration if needed
+        return modelMapper;
+    }
+
 }

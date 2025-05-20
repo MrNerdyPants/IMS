@@ -39,6 +39,7 @@ import { MainComponent } from './main/main.component';
 import { AddPurchaseComponent } from './business/purchase/add-purchase/add-purchase.component';
 import { AddContractComponent } from './setup/contract/add-contract/add-contract.component';
 import { ViewSummaryComponent } from './maintenance/model/view-summary/view-summary.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   {
@@ -104,6 +105,7 @@ const routes: Routes = [
       { path: 'edit-contract/:id', component: AddContractComponent },
       { path: 'contracts', component: ContractComponent },
       { path: "access-denied", component: AccessDeniedComponent },
+      { path: "profile", component: ProfileComponent },
     ]
   }
 ];
