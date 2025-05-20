@@ -2,8 +2,10 @@ pipeline {
     agent any
 
     environment {
-        BUILD_DIR = "dist/velzon"  // Output folder after Angular build
-        DEPLOY_DIR = "/var/lib/jenkins/workspace/IMS-Frontend/ims-alert" // Target directory for deployment
+        FRONTEND_DIR = 'ims-alert-front-end-main'           // Relative path inside the repo
+        BUILD_DIR = 'dist/velzon'                           // Angular output folder
+        DEPLOY_DIR = '/var/lib/jenkins/workspace/IMS-Frontend/ims-alert'  // Final deployment target
+        NODE_ENV = 'production'
     }
 
     stages {
@@ -13,44 +15,54 @@ pipeline {
             }
         }
 
-        stage('Verify Node.js and npm') {
+        stage('Verify Node.js & Angular CLI') {
             steps {
-                sh 'node -v'
-                sh 'npm -v'
-                sh 'ng version'
+                dir("${FRONTEND_DIR}") {
+                    sh 'node -v'
+                    sh 'npm -v'
+                    sh 'npx ng version'
+                }
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm ci'  // More reliable than 'npm install' for CI/CD
+                dir("${FRONTEND_DIR}") {
+                    // npm ci ensures a clean and repeatable install
+                    sh 'npm ci'
+                }
             }
         }
 
         stage('Build Angular App') {
             steps {
-                sh 'ng build --configuration=production'
+                dir("${FRONTEND_DIR}") {
+                    // Use npx to avoid global ng dependency
+                    sh 'npx ng build --configuration=production'
+                }
             }
         }
 
         stage('Deploy') {
             steps {
-                script {
-                    if (fileExists(BUILD_DIR)) {
-                        echo "🚀 Deploying build to ${DEPLOY_DIR}..."
+                dir("${FRONTEND_DIR}") {
+                    script {
+                        if (fileExists("${BUILD_DIR}")) {
+                            echo "🚀 Deploying build to ${DEPLOY_DIR}..."
 
-                        // Ignore errors if DEPLOY_DIR does not exist
-                        sh "rm -rf ${DEPLOY_DIR} || true"
-                
-                        // Create the deployment directory
-                        sh "mkdir -p ${DEPLOY_DIR}"
-                
-                        // Copy build artifacts
-                        sh "cp -r ${BUILD_DIR}/* ${DEPLOY_DIR}/"
+                            // Clear old deploy dir if exists
+                            sh "rm -rf ${DEPLOY_DIR} || true"
 
-                        echo "✅ Deployment complete."
-                   } else {
-                        error "❌ Build directory not found: ${BUILD_DIR}"
+                            // Recreate and copy contents
+                            sh """
+                                mkdir -p ${DEPLOY_DIR}
+                                cp -r ${BUILD_DIR}/* ${DEPLOY_DIR}/
+                            """
+
+                            echo "✅ Frontend deployed to ${DEPLOY_DIR}"
+                        } else {
+                            error "❌ Build directory not found: ${BUILD_DIR}"
+                        }
                     }
                 }
             }
@@ -59,10 +71,11 @@ pipeline {
 
     post {
         success {
-            echo '✅ Build and Deployment Successful!'
+            echo '✅ Frontend Build and Deployment Successful!'
         }
         failure {
-            echo '❌ Build Failed!'
+            echo '❌ Frontend Build Failed!'
         }
     }
 }
+
