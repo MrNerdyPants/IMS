@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        MAVEN_HOME = tool 'Maven'  // Reference the configured Maven tool
+        MAVEN_HOME = tool 'Maven'
         DB_URL = 'jdbc:postgresql://localhost:5432/ims_alert_db'
         DB_USER = 'postgres'
         DB_PASS = 'password'
@@ -20,7 +20,7 @@ pipeline {
         stage('Check PostgreSQL Connection') {
             steps {
                 script {
-                    def status = sh(script: "pg_isready -h localhost -p 5432 -U postgres", returnStatus: true)
+                    def status = sh(script: "pg_isready -h localhost -p 5432 -U ${DB_USER}", returnStatus: true)
                     if (status != 0) {
                         error("❌ PostgreSQL is not running or inaccessible.")
                     } else {
@@ -32,25 +32,26 @@ pipeline {
 
         stage('Stop Running Application') {
             steps {
-                script {
-                    cd "/ims-alert-api-main"
-                    if (fileExists(PID_FILE)) {
-                        def pid = sh(script: "cat ${PID_FILE}", returnStdout: true).trim()
-                        echo "🔍 Checking if process ${pid} is running..."
-                        def isRunning = sh(script: "ps -p ${pid} > /dev/null 2>&1", returnStatus: true)
+                dir('ims-alert-api-main') {
+                    script {
+                        if (fileExists(PID_FILE)) {
+                            def pid = sh(script: "cat ${PID_FILE}", returnStdout: true).trim()
+                            echo "🔍 Checking if process ${pid} is running..."
+                            def isRunning = sh(script: "ps -p ${pid} > /dev/null 2>&1", returnStatus: true)
 
-                        if (isRunning == 0) {
-                            echo "🛑 Stopping running application with PID ${pid}..."
-                            sh "kill ${pid}"
-                            sleep 5  // Give it time to shut down
-
-                            isRunning = sh(script: "ps -p ${pid} > /dev/null 2>&1", returnStatus: true)
                             if (isRunning == 0) {
-                                echo "⚠️ Force killing process ${pid}..."
-                                sh "kill -9 ${pid}"
+                                echo "🛑 Stopping running application with PID ${pid}..."
+                                sh "kill ${pid}"
+                                sleep 5
+
+                                isRunning = sh(script: "ps -p ${pid} > /dev/null 2>&1", returnStatus: true)
+                                if (isRunning == 0) {
+                                    echo "⚠️ Force killing process ${pid}..."
+                                    sh "kill -9 ${pid}"
+                                }
                             }
+                            sh "rm -f ${PID_FILE}"
                         }
-                        sh "rm -f ${PID_FILE}" // Ensure PID file is cleaned
                     }
                 }
             }
@@ -58,27 +59,29 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                cd "/ims-alert-api-main"
-                sh "\"${MAVEN_HOME}/bin/mvn\" clean package -DskipTests"
+                dir('ims-alert-api-main') {
+                    sh "${MAVEN_HOME}/bin/mvn clean package -DskipTests"
+                }
             }
         }
 
         stage('Deploy') {
             steps {
-                script {
-                    cd "/ims-alert-api-main"
-                    if (fileExists(JAR_PATH)) {
-                        echo "🚀 Starting application..."
-                        sh """
-                            export JENKINS_NODE_COOKIE=dontKillMe
-                            nohup setsid /usr/bin/java -jar target/ims-0.0.1.jar --spring.profiles.active=local > app.log 2>&1 &
-                            echo \$! > pid.file
-                        """
-                        sleep 15  // Give time for the app to start
-                        def newPid = sh(script: "cat pid.file", returnStdout: true).trim()
-                        echo "✅ Application started with PID ${newPid}"
-                    } else {
-                        error "❌ JAR file not found: ${JAR_PATH}"
+                dir('ims-alert-api-main') {
+                    script {
+                        if (fileExists(JAR_PATH)) {
+                            echo "🚀 Starting application..."
+                            sh """
+                                export JENKINS_NODE_COOKIE=dontKillMe
+                                nohup setsid java -jar ${JAR_PATH} --spring.profiles.active=local > app.log 2>&1 &
+                                echo \$! > ${PID_FILE}
+                            """
+                            sleep 15
+                            def newPid = sh(script: "cat ${PID_FILE}", returnStdout: true).trim()
+                            echo "✅ Application started with PID ${newPid}"
+                        } else {
+                            error "❌ JAR file not found: ${JAR_PATH}"
+                        }
                     }
                 }
             }
