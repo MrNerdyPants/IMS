@@ -33,6 +33,7 @@ pipeline {
         stage('Stop Running Application') {
             steps {
                 script {
+                    cd "/ims-alert-api-main"
                     if (fileExists(PID_FILE)) {
                         def pid = sh(script: "cat ${PID_FILE}", returnStdout: true).trim()
                         echo "🔍 Checking if process ${pid} is running..."
@@ -57,6 +58,7 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
+                cd "/ims-alert-api-main"
                 sh "\"${MAVEN_HOME}/bin/mvn\" clean package -DskipTests"
             }
         }
@@ -64,6 +66,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    cd "/ims-alert-api-main"
                     if (fileExists(JAR_PATH)) {
                         echo "🚀 Starting application..."
                         sh """
