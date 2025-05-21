@@ -1,9 +1,11 @@
 package com.sys.ims.repository;
 
+import com.sys.ims.model.Client;
 import com.sys.ims.model.NCustomer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -25,4 +27,5 @@ import java.util.UUID;
  */
 @Repository
 public interface NCustomerRepository extends JpaRepository<NCustomer, UUID> {
+    List<NCustomer> findByClient(Client client);
 }
