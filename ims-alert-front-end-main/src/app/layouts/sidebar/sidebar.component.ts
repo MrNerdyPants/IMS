@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MENU } from './menu';
 import { MenuItem } from './menu.model';
 import { LocalService } from 'src/app/services/local.service';
+import {fallbackUser} from 'src/app/layouts/sidebar/menu-new.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -26,8 +27,11 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
     // Menu Items
     this.menuItems = [];
-    let isUserAuthenticate = JSON.parse(this.local?.getData("currentUser"));
+    let isUserAuthenticate = this.local?.getData("current")
+  ? JSON.parse(this.local.getData("currentUser"))
+  : fallbackUser;
     if (isUserAuthenticate) {
+      console.log(isUserAuthenticate);
       let userRights = this.sortRights(isUserAuthenticate['rights']);
       // console.log(userRights);
       for (let right of userRights) {

@@ -76,4 +76,7 @@ public class Product {
 	private List<ProductVideo> videoLinks = new ArrayList<>();
 	@OneToMany(mappedBy = "product", cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE })
 	private List<ProductAttachment> documents = new ArrayList<>();
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	private List<Complaint> complaints = new ArrayList<>();
+
 }

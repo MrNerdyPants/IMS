@@ -57,4 +57,8 @@ public class Employee {
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private List<EmployeePhone> phone = new ArrayList<>();
+
+    @OneToMany(mappedBy = "assignedTo", cascade = CascadeType.ALL)
+    private List<Complaint> complaints = new ArrayList<>();
+
 }
