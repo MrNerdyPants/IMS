@@ -4,7 +4,8 @@ import { GenericService } from 'src/app/services/generic.service';
 import { User } from '../user/user.model';
 
 
-import { ToastService } from 'src/app/account/toasts/toast.service';
+import { ToastService } from '../toast.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +17,8 @@ export class ProfileComponent {
 
   constructor(
     private genericService: GenericService,
-    private toaster: ToastService
+    private toaster: ToastService,
+    private router: Router,
     // , private modalService: NgbModal
   ) {
   }
@@ -58,16 +60,13 @@ export class ProfileComponent {
       return;
     }
     this.genericService.putData("users/me", this.addForm.value).subscribe({
-      next: (response:any) => {
-        console.log(response);
-
+      next: (response: any) => {
         this.toaster.success("Profile updated successfully");
+        this.router.navigate(['']);
       },
       error: () => {
         this.toaster.error("Failed to update profile");
-
       }
     })
   }
-
 }
