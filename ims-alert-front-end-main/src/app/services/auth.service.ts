@@ -6,6 +6,7 @@ import { GlobalComponent } from '../global-component';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalService } from './local.service';
+import { SignUp } from '../account/sign-up/sign-up.model';
 
 
 const TOKEN_KEY = 'auth-token';
@@ -106,6 +107,10 @@ export class AuthenticationService {
         const body = { token, password };
 
         return this.http.post<any>(environment.apiUrl + 'setup/resetUserPassword', body);
+    }
+
+    signUp(signUpBody: SignUp): Observable<any> {
+        return this.http.post<any>(environment.apiUrl + 'nauth/signup', signUpBody);
     }
 
 

@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GenericService } from 'src/app/services/generic.service';
 import { User } from '../user/user.model';
-import { ToastService } from '../toast.service';
+
+
+import { ToastService } from 'src/app/account/toasts/toast.service';
 
 @Component({
   selector: 'app-profile',
@@ -58,9 +60,11 @@ export class ProfileComponent {
     this.genericService.putData("users/me", this.addForm.value).subscribe({
       next: (response:any) => {
         console.log(response);
-        
+
+        this.toaster.success("Profile updated successfully");
       },
       error: () => {
+        this.toaster.error("Failed to update profile");
 
       }
     })

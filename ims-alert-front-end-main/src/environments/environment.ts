@@ -18,6 +18,7 @@ export const environment = {
   // apiUrl: 'http://ims.baerp.com/api/',
   // apiUrl: 'http://localhost:8088/ims/api/',
   apiUrl: 'http://localhost:8088/api/',
+  // apiUrl: 'http://82.29.174.16:8088/api/',
 };
 /*
  * For easier debugging in development mode, you can import the following file

@@ -8,12 +8,14 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastsContainer } from './toasts/toasts-container.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
 
 @NgModule({
   declarations: [
     ToastsContainer,
     RegisterComponent,
-    LoginComponent    
+    LoginComponent,
+    SignUpComponent    
   ],
   imports: [
     CommonModule,
